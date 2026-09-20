@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<title>BIO PULSE v2 — ชีววิทยา ม.4 เทอม 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* ===================== CORE ===================== */
+:root{
+  --bg:#05070d; --bg2:#0a0f1c;
+  --c1:#00ffc6; --c2:#7b5cff; --c3:#ff3d81; --c4:#ffd166;
+  --ok:#21e6a4; --no:#ff4d6d; --ice:#4cc9f0;
+  --tx:#eaf2ff; --tx2:#8fa3c4;
+  --glass:rgba(255,255,255,.055); --line:rgba(255,255,255,.11);
+  --r:22px; --ease:cubic-bezier(.16,1,.3,1);
+}
+body.t-nebula{--c1:#a78bfa;--c2:#38bdf8;--c3:#f472b6;--c4:#fbbf24}
+body.t-sunset{--c1:#ffb347;--c2:#ff5e62;--c3:#ff2e9a;--c4:#ffe066}
+body.t-ice{--c1:#7ff0ff;--c2:#4c7dff;--c3:#b98bff;--c4:#e0f7ff}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Anuphan',system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);
+  color:var(--tx);overflow-x:hidden;min-height:100dvh;line-height:1.65;transition:background .6s}
+.mono{font-family:'Orbitron',monospace;letter-spacing:.5px}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer}
+::selection{background:var(--c1);color:#04110d}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#0a0f1c}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--c2),var(--c1));border-radius:9px}
+
+/* ===================== BG ===================== */
+#cells{position:fixed;inset:0;z-index:0;opacity:.55;transition:filter .5s}
+.bgwrap{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+  radial-gradient(1200px 700px at 12% -5%,rgba(123,92,255,.28),transparent 60%),
+  radial-gradient(1000px 650px at 92% 8%,rgba(0,255,198,.16),transparent 60%),
+  radial-gradient(900px 700px at 50% 108%,rgba(255,61,129,.18),transparent 60%),
+  linear-gradient(180deg,var(--bg),var(--bg2))}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.34;mix-blend-mode:screen;animation:drift 22s var(--ease) infinite alternate}
+.b1{width:46vmax;height:46vmax;background:var(--c2);top:-18vmax;left:-12vmax}
+.b2{width:40vmax;height:40vmax;background:var(--c1);bottom:-16vmax;right:-10vmax;animation-delay:-7s}
+.b3{width:32vmax;height:32vmax;background:var(--c3);top:42%;left:52%;animation-delay:-13s}
+@keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(6vw,-5vh,0) scale(1.18)}100%{transform:translate3d(-5vw,7vh,0) scale(.92)}}
+.grid{position:absolute;inset:0;opacity:.28;background-image:
+  linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(circle at 50% 35%,#000 20%,transparent 78%)}
+.scan{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.32;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+body.boss .bgwrap{filter:hue-rotate(-40deg) saturate(1.5)}
+body.frozen #cells{filter:hue-rotate(160deg) brightness(1.3)}
+
+/* ===================== LAYOUT ===================== */
+.app{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:0 16px 100px}
+.screen{display:none;animation:screenIn .75s var(--ease) both}
+.screen.on{display:block}
+@keyframes screenIn{from{opacity:0;transform:translateY(34px) scale(.97);filter:blur(10px)}to{opacity:1;transform:none;filter:blur(0)}}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);
+  backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);
+  box-shadow:0 26px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.09)}
+
+/* ===================== INTRO ===================== */
+.hero{text-align:center;padding:44px 0 8px}
+.dna{display:flex;gap:7px;justify-content:center;align-items:center;height:120px;margin-bottom:22px}
+.dna i{width:8px;height:8px;border-radius:50%;display:block;position:relative;
+  background:var(--c1);box-shadow:0 0 14px var(--c1);animation:helixA 2.2s ease-in-out infinite}
+.dna i::after{content:"";position:absolute;left:0;width:8px;height:8px;border-radius:50%;
+  background:var(--c3);box-shadow:0 0 14px var(--c3);animation:helixB 2.2s ease-in-out infinite;animation-delay:inherit}
+@keyframes helixA{0%,100%{transform:translateY(-36px) scale(.55);opacity:.45}50%{transform:translateY(36px) scale(1.25);opacity:1}}
+@keyframes helixB{0%,100%{transform:translateY(36px) scale(1.25);opacity:1}50%{transform:translateY(-36px) scale(.55);opacity:.45}}
+.tag{display:inline-flex;align-items:center;gap:9px;font-size:.74rem;letter-spacing:3px;
+  padding:8px 18px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--tx2)}
+.tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c1);box-shadow:0 0 12px var(--c1);animation:beat 1.4s infinite}
+@keyframes beat{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.55);opacity:.4}}
+h1.title{font-family:'Orbitron';font-size:clamp(2.4rem,9.5vw,5.2rem);font-weight:900;line-height:.95;margin:18px 0 6px;
+  background:linear-gradient(100deg,var(--c1),#fff 32%,var(--c2) 58%,var(--c3) 82%,var(--c1));
+  background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 7s linear infinite;filter:drop-shadow(0 0 28px rgba(0,255,198,.25))}
+@keyframes shine{to{background-position:280% 50%}}
+.v{font-family:'Orbitron';font-size:.7rem;letter-spacing:3px;color:var(--c1);margin-bottom:12px}
+.sub{color:var(--tx2);font-size:1.02rem;max-width:580px;margin:0 auto 26px}
+.sub b{color:var(--c1);font-weight:600}
+
+/* stat strip */
+.saved{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:0 auto 26px;max-width:640px}
+.sv{padding:13px 8px;border-radius:16px;text-align:center;animation:popIn .6s var(--ease) both}
+.sv b{display:block;font-family:'Orbitron';font-size:1.35rem;color:var(--c1)}
+.sv span{font-size:.68rem;letter-spacing:1.2px;color:var(--tx2)}
+@keyframes popIn{from{opacity:0;transform:translateY(16px) scale(.85)}to{opacity:1;transform:none}}
+
+/* setup */
+.setup{padding:22px;border-radius:22px;margin-bottom:22px;text-align:left}
+.setup h3{font-size:.95rem;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.setup h3 small{font-weight:400;color:var(--tx2);font-size:.8rem}
+.opts{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:20px}
+.opt{padding:9px 16px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.04);
+  font-size:.87rem;color:var(--tx2);transition:.32s var(--ease);position:relative;overflow:hidden}
+.opt:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.3)}
+.opt.on{background:linear-gradient(100deg,var(--c1),var(--c2));color:#04110d;font-weight:700;border-color:transparent;
+  box-shadow:0 8px 24px rgba(0,255,198,.3)}
+.opt.on::after{content:"✓";margin-left:7px;font-weight:900}
+.themes{display:flex;gap:9px}
+.th{width:38px;height:38px;border-radius:12px;border:2px solid transparent;transition:.3s var(--ease)}
+.th:hover{transform:scale(1.13) rotate(-8deg)}
+.th.on{border-color:#fff;box-shadow:0 0 18px rgba(255,255,255,.4)}
+.th1{background:linear-gradient(135deg,#00ffc6,#7b5cff)}
+.th2{background:linear-gradient(135deg,#a78bfa,#38bdf8)}
+.th3{background:linear-gradient(135deg,#ffb347,#ff2e9a)}
+.th4{background:linear-gradient(135deg,#7ff0ff,#4c7dff)}
+
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px 38px;border-radius:99px;font-weight:700;font-size:1.03rem;
+  background:linear-gradient(100deg,var(--c1),var(--c2));color:#03110e;
+  box-shadow:0 14px 40px rgba(0,255,198,.28),0 0 0 1px rgba(255,255,255,.18) inset;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.btn:hover{transform:translateY(-4px) scale(1.035);box-shadow:0 22px 56px rgba(123,92,255,.42)}
+.btn:active{transform:scale(.97)}
+.btn::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);animation:sweep 3.4s infinite}
+@keyframes sweep{0%{left:-120%}55%,100%{left:170%}}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--tx);box-shadow:none}
+.btn.ghost::after{display:none}
+.btn.ghost:hover{background:rgba(255,255,255,.07)}
+.btn.danger{background:linear-gradient(100deg,var(--no),#ff7a2f);color:#fff;box-shadow:0 14px 40px rgba(255,77,109,.3)}
+.btn.sm{padding:12px 26px;font-size:.92rem}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:13px;margin-top:36px}
+.fcard{padding:20px;border-radius:18px;animation:popIn .7s var(--ease) both;transition:transform .4s var(--ease),border-color .4s;text-align:left}
+.fcard:hover{transform:translateY(-7px);border-color:rgba(0,255,198,.42)}
+.fcard .ic{font-size:1.6rem;margin-bottom:8px;display:block;animation:float 3.4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(6deg)}}
+.fcard h4{font-size:.96rem;margin-bottom:4px}
+.fcard p{font-size:.83rem;color:var(--tx2)}
+
+/* ===================== HUD ===================== */
+.hud{position:sticky;top:0;z-index:40;padding:10px 12px;margin:12px 0 10px;border-radius:20px;
+  background:rgba(8,12,22,.78);border:1px solid var(--line);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.hudrow{display:flex;align-items:center;gap:10px}
+.ringbox{position:relative;width:58px;height:58px;flex:0 0 auto}
+.ringbox svg{transform:rotate(-90deg);display:block}
+.ringbox .tval{position:absolute;inset:0;display:grid;place-items:center;font-size:.76rem;font-weight:700;font-family:'Orbitron'}
+#ringFg{transition:stroke-dashoffset 1s linear,stroke .5s}
+.hud.warn .ringbox{animation:danger 1s infinite}
+.hud.freeze .ringbox{animation:icy 1.2s infinite}
+@keyframes danger{0%,100%{filter:none}50%{filter:drop-shadow(0 0 16px var(--no))}}
+@keyframes icy{0%,100%{filter:drop-shadow(0 0 4px var(--ice))}50%{filter:drop-shadow(0 0 20px var(--ice))}}
+.stats{display:flex;gap:7px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.stats::-webkit-scrollbar{display:none}
+.st{flex:0 0 auto;text-align:center;padding:5px 12px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.st span{display:block;font-size:.58rem;letter-spacing:1.3px;color:var(--tx2)}
+.st b{font-family:'Orbitron';font-size:1rem;font-weight:700}
+.st.pop b{animation:bump .45s var(--ease)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.55);color:var(--c1)}100%{transform:scale(1)}}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);
+  display:grid;place-items:center;font-size:.95rem;transition:.3s var(--ease);flex:0 0 auto}
+.iconbtn:hover{background:rgba(0,255,198,.16);transform:translateY(-2px) rotate(-8deg)}
+.iconbtn.red:hover{background:rgba(255,77,109,.2)}
+/* xp */
+.xprow{display:flex;align-items:center;gap:9px;margin-top:9px}
+.lvbadge{font-family:'Orbitron';font-size:.66rem;font-weight:900;padding:3px 10px;border-radius:99px;
+  background:linear-gradient(100deg,var(--c4),var(--c3));color:#20100a;flex:0 0 auto}
+.xpbar{flex:1;height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+.xpbar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--c4),var(--c1));
+  transition:width .8s var(--ease);box-shadow:0 0 12px var(--c1)}
+.xptx{font-size:.62rem;color:var(--tx2);font-family:'Orbitron';flex:0 0 auto}
+
+/* powerups */
+.powers{display:flex;gap:7px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.powers::-webkit-scrollbar{display:none}
+.pw{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:14px;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:.82rem;transition:.3s var(--ease);position:relative}
+.pw:hover:not(:disabled){transform:translateY(-3px);border-color:var(--c1);background:rgba(0,255,198,.12)}
+.pw:disabled{opacity:.3;cursor:not-allowed}
+.pw .cnt{font-family:'Orbitron';font-size:.68rem;font-weight:900;background:var(--c1);color:#04110d;
+  padding:1px 7px;border-radius:99px}
+.pw.used{animation:pwUse .6s var(--ease)}
+@keyframes pwUse{0%{transform:scale(1)}40%{transform:scale(1.3) rotate(-8deg);box-shadow:0 0 30px var(--c1)}100%{transform:scale(1)}}
+.pbar{height:4px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:14px}
+.pbar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3));
+  background-size:200% 100%;animation:shine 3s linear infinite;transition:width .7s var(--ease)}
+/* per-question timer */
+#qtWrap{display:none;margin-bottom:12px}
+.qt{height:7px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+.qt i{display:block;height:100%;width:100%;border-radius:9px;background:linear-gradient(90deg,var(--c4),var(--no))}
+.qtlab{font-size:.68rem;color:var(--tx2);font-family:'Orbitron';margin-bottom:4px;display:flex;justify-content:space-between}
+
+/* ===================== QUESTION ===================== */
+.qwrap{perspective:1600px}
+.qcard{padding:26px 24px;border-radius:26px;transform-style:preserve-3d;position:relative;overflow:hidden}
+.qcard.in{animation:qIn .68s var(--ease) both}
+.qcard.out{animation:qOut .35s var(--ease) both}
+@keyframes qIn{from{opacity:0;transform:rotateX(-16deg) translateY(46px) scale(.94);filter:blur(9px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes qOut{to{opacity:0;transform:rotateX(12deg) translateY(-40px) scale(.95);filter:blur(9px)}}
+.qcard.boss{border-color:rgba(255,209,102,.5);box-shadow:0 0 0 1px rgba(255,209,102,.4),0 26px 70px rgba(255,120,60,.25)}
+.qcard.boss::before{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,rgba(255,209,102,.13),transparent 28%);animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.qcard>*{position:relative;z-index:1}
+.qtop{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.topic{font-size:.7rem;letter-spacing:1.5px;padding:5px 12px;border-radius:99px;
+  border:1px solid rgba(0,255,198,.42);color:var(--c1);background:rgba(0,255,198,.09)}
+.qno{font-family:'Orbitron';font-size:.72rem;color:var(--tx2);letter-spacing:1.4px}
+.badge{font-size:.66rem;padding:4px 10px;border-radius:99px;background:rgba(255,209,102,.13);
+  border:1px solid rgba(255,209,102,.4);color:var(--c4)}
+.badge.boss{background:linear-gradient(100deg,var(--c4),var(--c3));color:#2a1208;font-weight:800;border:none;
+  animation:bossPulse 1.3s infinite}
+@keyframes bossPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 rgba(255,209,102,.6)}50%{transform:scale(1.07);box-shadow:0 0 22px rgba(255,209,102,.7)}}
+.star{margin-left:auto;font-size:1.15rem;opacity:.42;transition:.3s var(--ease)}
+.star:hover{opacity:1;transform:scale(1.25) rotate(18deg)}
+.star.on{opacity:1;filter:drop-shadow(0 0 10px var(--c4));animation:bump .5s var(--ease)}
+.qtext{font-size:clamp(1.1rem,3.3vw,1.46rem);font-weight:600;line-height:1.55;margin-bottom:20px}
+.choices{display:grid;gap:10px}
+.ch{position:relative;overflow:hidden;display:flex;align-items:center;gap:13px;text-align:left;width:100%;
+  padding:14px 16px;border-radius:17px;border:1px solid var(--line);background:rgba(255,255,255,.035);
+  font-size:.99rem;line-height:1.5;transition:transform .3s var(--ease),background .3s,border-color .3s,box-shadow .3s,opacity .4s;
+  animation:chIn .55s var(--ease) both}
+@keyframes chIn{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+.ch .k{flex:0 0 auto;width:31px;height:31px;border-radius:10px;display:grid;place-items:center;
+  font-family:'Orbitron';font-size:.83rem;font-weight:700;background:rgba(255,255,255,.08);
+  border:1px solid var(--line);transition:.3s var(--ease)}
+.ch:hover:not(.lock):not(.gone){transform:translateX(7px);background:rgba(0,255,198,.09);border-color:rgba(0,255,198,.5);
+  box-shadow:0 12px 30px rgba(0,255,198,.14)}
+.ch:hover:not(.lock):not(.gone) .k{background:var(--c1);color:#04110d;transform:rotate(-9deg) scale(1.12)}
+.ch.lock{cursor:default}
+.ch.gone{opacity:.16;pointer-events:none;filter:grayscale(1) blur(1px);transform:scale(.97)}
+.ch.correct{background:rgba(33,230,164,.16);border-color:var(--ok);box-shadow:0 0 0 1px var(--ok),0 0 34px rgba(33,230,164,.28);animation:goodPulse .7s var(--ease)}
+.ch.correct .k{background:var(--ok);color:#03110d}
+.ch.wrong{background:rgba(255,77,109,.14);border-color:var(--no);animation:shake .5s}
+.ch.wrong .k{background:var(--no);color:#fff}
+.ch.dim{opacity:.38;filter:grayscale(.55)}
+@keyframes goodPulse{0%{transform:scale(1)}35%{transform:scale(1.035)}100%{transform:scale(1)}}
+@keyframes shake{10%,90%{transform:translateX(-4px)}20%,80%{transform:translateX(7px)}30%,50%,70%{transform:translateX(-10px)}40%,60%{transform:translateX(10px)}}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);background:rgba(255,255,255,.35);
+  animation:rip .65s var(--ease) forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(3.4);opacity:0}}
+.mark{position:absolute;right:13px;width:23px;height:23px}
+.mark path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .55s var(--ease) forwards .1s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hintbox{margin-top:13px;padding:13px 15px;border-radius:15px;border:1px dashed var(--c4);
+  background:rgba(255,209,102,.08);font-size:.89rem;color:#ffe6ad;animation:expIn .5s var(--ease) both}
+.exp{margin-top:15px;padding:17px 18px;border-radius:18px;border-left:3px solid var(--c1);
+  background:linear-gradient(100deg,rgba(0,255,198,.09),rgba(123,92,255,.07));animation:expIn .6s var(--ease) both}
+.exp.bad{border-left-color:var(--no);background:linear-gradient(100deg,rgba(255,77,109,.1),rgba(123,92,255,.06))}
+@keyframes expIn{from{opacity:0;transform:translateY(24px);max-height:0}to{opacity:1;transform:none;max-height:600px}}
+.exp h4{font-size:.93rem;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.exp p{font-size:.94rem;color:#d3e0f5}
+.exp .ans{margin-top:8px;font-size:.88rem;color:var(--tx2)}
+.exp .ans b{color:var(--c1)}
+.nextrow{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.hintkey{font-size:.76rem;color:var(--tx2)}
+.hintkey kbd{font-family:'Orbitron';font-size:.68rem;padding:3px 7px;border-radius:7px;border:1px solid var(--line);background:rgba(255,255,255,.06)}
+
+/* finish bar */
+.finbar{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+#btnFinish{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;
+  padding:15px 40px;border-radius:99px;font-weight:800;font-size:1.02rem;letter-spacing:.5px;
+  border:1.5px solid rgba(255,77,109,.55);color:#ffdde3;background:rgba(255,77,109,.1);
+  transition:.35s var(--ease)}
+#btnFinish:hover{background:linear-gradient(100deg,var(--no),#ff7a2f);color:#fff;transform:translateY(-4px) scale(1.04);
+  box-shadow:0 20px 48px rgba(255,77,109,.4);border-color:transparent}
+#btnFinish::before{content:"";position:absolute;inset:0;border-radius:99px;
+  box-shadow:0 0 0 0 rgba(255,77,109,.55);animation:pulseRing 2.4s infinite}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(255,77,109,.5)}70%{box-shadow:0 0 0 16px rgba(255,77,109,0)}100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}}
+
+/* ===================== FX ===================== */
+.pointpop{position:fixed;z-index:60;font-family:'Orbitron';font-weight:900;font-size:1.5rem;pointer-events:none;
+  color:var(--c1);text-shadow:0 0 22px var(--c1);animation:ptUp 1.15s var(--ease) forwards}
+@keyframes ptUp{0%{opacity:0;transform:translateY(0) scale(.5)}25%{opacity:1;transform:translateY(-24px) scale(1.25)}100%{opacity:0;transform:translateY(-96px) scale(.85)}}
+.spark{position:fixed;width:7px;height:7px;border-radius:50%;z-index:59;pointer-events:none}
+.combo{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:60;pointer-events:none;
+  font-family:'Orbitron';font-weight:900;font-size:clamp(1.6rem,7vw,2.8rem);text-align:center;
+  background:linear-gradient(100deg,var(--c4),var(--c3));-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:comboIn 1.4s var(--ease) forwards}
+@keyframes comboIn{0%{opacity:0;transform:translateX(-50%) scale(.3) rotate(-12deg)}30%{opacity:1;transform:translateX(-50%) scale(1.15) rotate(3deg)}70%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0;transform:translateX(-50%) scale(.9) translateY(-40px)}}
+#confetti{position:fixed;inset:0;z-index:70;pointer-events:none}
+
+/* toasts */
+#toasts{position:fixed;top:14px;right:14px;z-index:95;display:flex;flex-direction:column;gap:9px;pointer-events:none;max-width:320px}
+.toast{display:flex;align-items:center;gap:12px;padding:13px 17px;border-radius:17px;
+  background:rgba(12,18,32,.96);border:1px solid var(--c4);box-shadow:0 18px 48px rgba(0,0,0,.6);
+  animation:tIn .6s var(--ease) both,tOut .5s var(--ease) 3.4s forwards}
+.toast .ti{font-size:1.5rem;animation:float 2s ease-in-out infinite}
+.toast b{display:block;font-size:.9rem;color:var(--c4)}
+.toast span{font-size:.79rem;color:var(--tx2)}
+@keyframes tIn{from{opacity:0;transform:translateX(120%) scale(.8)}to{opacity:1;transform:none}}
+@keyframes tOut{to{opacity:0;transform:translateX(120%) scale(.85)}}
+
+/* level up */
+#lvup{position:fixed;inset:0;z-index:88;display:none;place-items:center;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,rgba(123,92,255,.35),rgba(3,6,14,.82))}
+#lvup.on{display:grid;animation:tIn .4s}
+.lvbox{text-align:center;animation:lvIn 1s var(--ease) both}
+@keyframes lvIn{0%{opacity:0;transform:scale(.3) rotate(-14deg)}55%{opacity:1;transform:scale(1.12) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+.lvbox .t{font-family:'Orbitron';font-size:clamp(2rem,9vw,3.6rem);font-weight:900;
+  background:linear-gradient(100deg,var(--c4),var(--c1),var(--c3));background-size:250%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.4s linear infinite}
+.lvbox .n{font-family:'Orbitron';font-size:clamp(3.4rem,17vw,7rem);font-weight:900;color:#fff;
+  text-shadow:0 0 50px var(--c1);line-height:1}
+.lvbox .d{color:var(--tx2);margin-top:8px}
+
+/* ===================== MODAL ===================== */
+.modal{position:fixed;inset:0;z-index:92;display:none;place-items:center;padding:20px;
+  background:rgba(3,6,14,.8);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.modal.on{display:grid;animation:tIn .3s}
+.mbox{width:100%;max-width:430px;padding:28px 26px;border-radius:26px;text-align:center;
+  background:rgba(12,18,32,.97);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.7);
+  animation:lvIn .6s var(--ease) both}
+.mbox .mi{font-size:2.6rem;margin-bottom:10px;display:block;animation:float 2.6s ease-in-out infinite}
+.mbox h3{font-size:1.25rem;margin-bottom:7px}
+.mbox p{color:var(--tx2);font-size:.92rem;margin-bottom:17px}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.mini div{padding:10px 4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.mini b{display:block;font-family:'Orbitron';font-size:1.05rem;color:var(--c1)}
+.mini span{font-size:.6rem;color:var(--tx2);letter-spacing:.6px}
+.mrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ===================== RESULT ===================== */
+.rhero{text-align:center;padding:32px 20px;border-radius:28px;margin-bottom:14px;position:relative;overflow:hidden}
+.rhero::before{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,rgba(0,255,198,.14),transparent 30%);animation:spin 9s linear infinite}
+.rhero>*{position:relative}
+.scorering{width:205px;height:205px;margin:0 auto 12px;position:relative}
+.scorering svg{transform:rotate(-90deg)}
+#scFg{transition:stroke-dashoffset 2.1s var(--ease)}
+.scorering .mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.scorering .pct{font-family:'Orbitron';font-size:3rem;font-weight:900;line-height:1;
+  background:linear-gradient(100deg,var(--c1),var(--c2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.scorering .lb{font-size:.66rem;letter-spacing:2.3px;color:var(--tx2)}
+.rank{font-family:'Orbitron';font-size:clamp(1.7rem,6.8vw,2.9rem);font-weight:900;margin:5px 0}
+.rank span{display:inline-block;animation:letter .6s var(--ease) both}
+@keyframes letter{from{opacity:0;transform:translateY(38px) rotateX(-90deg) scale(.5)}to{opacity:1;transform:none}}
+.newbest{display:inline-block;margin-top:8px;font-family:'Orbitron';font-size:.75rem;font-weight:900;padding:6px 15px;
+  border-radius:99px;background:linear-gradient(100deg,var(--c4),var(--c3));color:#2a1208;animation:bossPulse 1.2s infinite}
+.rstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin:18px 0}
+.rst{padding:14px 9px;border-radius:17px;text-align:center;animation:popIn .65s var(--ease) both}
+.rst b{display:block;font-family:'Orbitron';font-size:1.5rem;font-weight:900}
+.rst span{font-size:.67rem;letter-spacing:1.2px;color:var(--tx2)}
+.panel{padding:21px;border-radius:22px;margin-bottom:14px}
+.panel h3{font-size:1.03rem;margin-bottom:13px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.bar{margin-bottom:12px}
+.bar .lab{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:5px}
+.bar .lab b{font-family:'Orbitron';font-size:.82rem}
+.bar .track{height:9px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar .fill{height:100%;width:0;border-radius:9px;transition:width 1.3s var(--ease)}
+.filters{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.flt{padding:6px 14px;border-radius:99px;border:1px solid var(--line);font-size:.8rem;color:var(--tx2);transition:.3s}
+.flt.on{background:var(--c1);color:#04110d;font-weight:700;border-color:transparent}
+.rev{max-height:420px;overflow-y:auto;padding-right:6px}
+.ri{padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+  border-left:3px solid var(--ok);margin-bottom:8px;font-size:.89rem;animation:popIn .5s var(--ease) both}
+.ri.bad{border-left-color:var(--no)}
+.ri .qq{font-weight:600;margin-bottom:5px}
+.ri .aa{font-size:.83rem;color:var(--tx2)}
+.ri .aa b{color:var(--ok)}
+.ri.bad .aa b.mine{color:var(--no)}
+.ri .ee{font-size:.82rem;color:#c3d2ea;margin-top:5px;padding-top:5px;border-top:1px dashed var(--line)}
+/* achievements grid */
+.achg{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:9px}
+.ach{padding:13px 8px;border-radius:16px;text-align:center;background:rgba(255,255,255,.04);
+  border:1px solid var(--line);transition:.35s var(--ease);animation:popIn .5s var(--ease) both}
+.ach.got{border-color:var(--c4);background:rgba(255,209,102,.1);box-shadow:0 0 20px rgba(255,209,102,.16)}
+.ach.got:hover{transform:translateY(-5px) scale(1.04)}
+.ach .ai{font-size:1.7rem;display:block;margin-bottom:5px;filter:grayscale(1);opacity:.35}
+.ach.got .ai{filter:none;opacity:1}
+.ach b{display:block;font-size:.74rem;margin-bottom:2px}
+.ach span{font-size:.64rem;color:var(--tx2);line-height:1.35;display:block}
+/* history chart */
+.chart{display:flex;align-items:flex-end;gap:6px;height:120px;padding:10px 0;border-bottom:1px solid var(--line)}
+.chart div{flex:1;border-radius:7px 7px 0 0;background:linear-gradient(180deg,var(--c1),var(--c2));
+  min-height:4px;position:relative;transition:height 1.1s var(--ease);height:0}
+.chart div:hover::after{content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  font-size:.66rem;font-family:'Orbitron';background:rgba(0,0,0,.8);padding:2px 7px;border-radius:7px;white-space:nowrap}
+.chartlab{display:flex;justify-content:space-between;font-size:.66rem;color:var(--tx2);margin-top:6px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+
+/* ===================== TOUR ===================== */
+#tour{position:fixed;inset:0;z-index:90;display:none}
+#tour.on{display:block}
+.spot{position:absolute;border-radius:18px;box-shadow:0 0 0 9999px rgba(3,6,14,.88),0 0 0 2px var(--c1),0 0 40px rgba(0,255,198,.55);
+  transition:all .6s var(--ease);pointer-events:none}
+.tip{position:absolute;max-width:320px;padding:17px 18px;border-radius:19px;
+  background:rgba(12,18,32,.97);border:1px solid rgba(0,255,198,.4);box-shadow:0 22px 60px rgba(0,0,0,.6);
+  transition:all .6s var(--ease)}
+.tip h4{font-size:.98rem;margin-bottom:5px;color:var(--c1);display:flex;align-items:center;gap:8px}
+.tip p{font-size:.88rem;color:#cfdcf0}
+.tip .row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px}
+.dots{display:flex;gap:5px}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);transition:.3s}
+.dots i.on{background:var(--c1);width:18px;border-radius:9px;box-shadow:0 0 12px var(--c1)}
+.tbtn{padding:9px 18px;border-radius:99px;font-size:.85rem;font-weight:700;background:linear-gradient(100deg,var(--c1),var(--c2));color:#04110d;transition:.3s var(--ease)}
+.tbtn:hover{transform:scale(1.06)}
+.tskip{font-size:.8rem;color:var(--tx2);text-decoration:underline}
+
+/* pause */
+#pause{position:fixed;inset:0;z-index:91;display:none;place-items:center;text-align:center;
+  background:rgba(3,6,14,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#pause.on{display:grid;animation:tIn .35s}
+#pause .pi{font-size:4rem;animation:float 2.4s ease-in-out infinite}
+#pause h2{font-family:'Orbitron';font-size:2rem;margin:10px 0 6px}
+#pause p{color:var(--tx2);margin-bottom:20px}
+
+/* ===================== MOBILE ===================== */
+@media(max-width:640px){
+  .app{padding:0 12px 90px}
+  .qcard{padding:20px 16px;border-radius:22px}
+  .hud{padding:9px;border-radius:17px}
+  .ringbox{width:50px;height:50px}
+  .st{padding:4px 9px}.st b{font-size:.9rem}
+  .btn{padding:14px 26px;font-size:.96rem}
+  #btnFinish{width:100%;justify-content:center}
+  .scorering{width:178px;height:178px}
+  .tip{max-width:calc(100vw - 26px)}
+  .ch{padding:12px;font-size:.93rem;gap:10px}
+  #toasts{left:12px;right:12px;max-width:none}
+  .mini{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div class="bgwrap"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<canvas id="cells"></canvas>
+<div class="scan"></div>
+<canvas id="confetti"></canvas>
+<div id="toasts"></div>
+<div id="lvup"><div class="lvbox"><div class="t">LEVEL UP</div><div class="n mono" id="lvN">2</div><div class="d" id="lvD"></div></div></div>
+<div id="pause"><div><div class="pi">⏸</div><h2>หยุดชั่วคราว</h2><p>เวลาหยุดเดินแล้ว พักได้เลยครับ</p><button class="btn" id="btnResume">▶ เล่นต่อ</button></div></div>
+<div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
+
+<div class="app">
+
+<!-- ================= INTRO ================= -->
+<section id="scIntro" class="screen on">
+  <div class="hero">
+    <div class="dna" id="dna"></div>
+    <div class="tag">BIOLOGY · GRADE 10 · SEMESTER 1</div>
+    <h1 class="title">BIO PULSE</h1>
+    <div class="v mono">VERSION 2.0 · EVOLVED</div>
+    <p class="sub">สนามฝึกชีววิทยา <b>ไม่จำกัดจำนวนข้อ</b> พร้อมระบบไอเทม · ข้อท้าทาย · เลเวล · เหรียญตรา<br>ตอบถูกต่อเนื่องเพื่อรับโบนัสทวีคูณ 🔥</p>
+
+    <div class="saved" id="savedBox"></div>
+
+    <div class="setup glass">
+      <h3>📚 เลือกหน่วยการเรียนรู้ <small>(แตะเพื่อเปิด/ปิด)</small></h3>
+      <div class="opts" id="optTopic"></div>
+      <h3>⏱ เวลาทดสอบ</h3>
+      <div class="opts" id="optTime"></div>
+      <h3>🎮 โหมดการเล่น</h3>
+      <div class="opts" id="optMode"></div>
+      <h3>🎨 ธีมสี</h3>
+      <div class="themes" id="optTheme">
+        <button class="th th1 on" data-t=""></button>
+        <button class="th th2" data-t="t-nebula"></button>
+        <button class="th th3" data-t="t-sunset"></button>
+        <button class="th th4" data-t="t-ice"></button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:11px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" id="btnStart">▶ เริ่มทดสอบ</button>
+      <button class="btn ghost" id="btnHow">❔ วิธีใช้งาน</button>
+      <button class="btn ghost" id="btnAchList">🏅 เหรียญตรา</button>
+    </div>
+    <div class="feat" id="feat"></div>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section id="scQuiz" class="screen">
+  <div class="hud" id="hud">
+    <div class="hudrow">
+      <div class="ringbox" id="hudTimer">
+        <svg width="58" height="58" viewBox="0 0 58 58">
+          <circle cx="29" cy="29" r="24" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="5"/>
+          <circle id="ringFg" cx="29" cy="29" r="24" fill="none" stroke="#00ffc6" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div class="tval mono" id="tTxt">40:00</div>
+      </div>
+      <div class="stats" id="hudStats">
+        <div class="st" id="stScore"><span>SCORE</span><b>0</b></div>
+        <div class="st" id="stDone"><span>ข้อที่</span><b>0</b></div>
+        <div class="st" id="stAcc"><span>ถูก %</span><b>0</b></div>
+        <div class="st" id="stStreak"><span>COMBO</span><b>0</b></div>
+      </div>
+      <button class="iconbtn" id="btnPause" title="หยุดชั่วคราว">⏸</button>
+      <button class="iconbtn" id="btnSound" title="เสียง">🔊</button>
+      <button class="iconbtn" id="btnTour" title="วิธีใช้">❔</button>
+      <button class="iconbtn red" id="btnEndTop" title="จบการทดสอบ" style="color:var(--no)">⏻</button>
+    </div>
+    <div class="xprow">
+      <div class="lvbadge mono" id="lvBadge">LV 1</div>
+      <div class="xpbar"><i id="xpFill"></i></div>
+      <div class="xptx" id="xpTx">0 / 150 XP</div>
+    </div>
+  </div>
+
+  <div class="powers" id="powers"></div>
+  <div class="pbar"><i id="pFill"></i></div>
+  <div id="qtWrap"><div class="qtlab"><span id="qtName">เวลาข้อนี้</span><span id="qtNum" class="mono">25</span></div><div class="qt"><i id="qtBar"></i></div></div>
+
+  <div class="qwrap"><div class="qcard glass in" id="qcard"></div></div>
+
+  <div class="finbar">
+    <button id="btnFinish">🏁 จบการทดสอบ &amp; ดูผลสรุป</button>
+  </div>
+</section>
+
+<!-- ================= RESULT ================= -->
+<section id="scResult" class="screen"></section>
+</div>
+
+<div id="tour"><div class="spot" id="spot"></div><div class="tip" id="tip"></div></div>
+
+<script>
+/* =========================================================
+   1) คลังข้อสอบ  [โจทย์, ตัวเลือก(|), เฉลย, คำอธิบาย, หมวด]
+   ========================================================= */
+const RAW=[
+/* ---- ธรรมชาติของสิ่งมีชีวิต & การศึกษาชีววิทยา ---- */
+["ขั้นตอนแรกของวิธีการทางวิทยาศาสตร์คือข้อใด","ตั้งสมมติฐาน|สังเกตและระบุปัญหา|ทดลอง|สรุปผล",1,"ทุกงานวิจัยเริ่มจากการสังเกตสิ่งรอบตัวจนเกิดข้อสงสัย แล้วตั้งเป็นปัญหา ก่อนจะไปตั้งสมมติฐานและทดลอง","การศึกษาชีววิทยา"],
+["สมมติฐานที่ดีต้องมีลักษณะสำคัญที่สุดคืออะไร","ยาวและละเอียด|ถูกต้องเสมอ|ทดสอบได้ด้วยการทดลอง|มาจากนักวิทยาศาสตร์ชื่อดัง",2,"สมมติฐานคือคำตอบที่คาดคะเนไว้ล่วงหน้า หัวใจคือต้องตรวจสอบได้ (testable) และอาจถูกหักล้างได้ (falsifiable)","การศึกษาชีววิทยา"],
+["การทดลองผลของปริมาณปุ๋ยต่อความสูงของต้นถั่ว ตัวแปรต้นคือข้อใด","ความสูงของต้นถั่ว|ปริมาณปุ๋ย|ชนิดของดิน|ปริมาณน้ำ",1,"ตัวแปรต้นคือสิ่งที่ผู้ทดลองจงใจเปลี่ยนแปลง ในที่นี้คือปริมาณปุ๋ย ส่วนความสูงคือตัวแปรตาม","การศึกษาชีววิทยา"],
+["ตัวแปรควบคุมในการทดลองหมายถึงข้อใด","สิ่งที่ต้องการวัดผล|สิ่งที่จัดให้เหมือนกันทุกชุดการทดลอง|สิ่งที่เปลี่ยนแปลงตามตัวแปรต้น|ชุดที่ไม่ใส่สารทดสอบ",1,"ตัวแปรควบคุมคือปัจจัยอื่นที่ต้องทำให้เหมือนกันทุกชุด เพื่อให้มั่นใจว่าผลที่ได้เกิดจากตัวแปรต้นเท่านั้น","การศึกษาชีววิทยา"],
+["ชุดการทดลองที่ไม่ได้รับสารที่ต้องการทดสอบ เรียกว่าอะไร","ชุดทดลอง|ชุดควบคุม|ตัวแปรตาม|ตัวแปรแทรกซ้อน",1,"ชุดควบคุม (control group) ใช้เป็นฐานเปรียบเทียบกับชุดทดลอง ทำให้เห็นผลของตัวแปรต้นชัดเจน","การศึกษาชีววิทยา"],
+["ข้อใดไม่ใช่สมบัติของสิ่งมีชีวิต","มีการสืบพันธุ์|มีเมแทบอลิซึม|มีการตอบสนองต่อสิ่งเร้า|มีขนาดเพิ่มขึ้นจากการเกาะพอกของผลึก",3,"การเพิ่มขนาดโดยผลึกเกาะพอกเป็นการเติบโตทางกายภาพ ไม่ใช่การเจริญเติบโตที่เกิดจากการเพิ่มจำนวนและขนาดเซลล์","ธรรมชาติของสิ่งมีชีวิต"],
+["ทฤษฎีเซลล์ข้อที่ว่า เซลล์เกิดจากเซลล์ที่มีอยู่ก่อน เสนอโดยใคร","โรเบิร์ต ฮุก|ชไลเดน|ชวานน์|รูดอล์ฟ วีร์โชว์",3,"Rudolf Virchow เสนอว่า Omnis cellula e cellula ส่วน Schleiden-Schwann เสนอว่าสิ่งมีชีวิตประกอบด้วยเซลล์ และ Hooke ตั้งชื่อ cell","ธรรมชาติของสิ่งมีชีวิต"],
+["การที่ร่างกายรักษาอุณหภูมิ 37 องศาเซลเซียสไว้ได้ เรียกว่าอะไร","เมแทบอลิซึม|โฮมีโอสเตซิส|การตอบสนอง|วิวัฒนาการ",1,"โฮมีโอสเตซิสคือการรักษาดุลยภาพภายในร่างกายให้คงที่ แม้สภาพแวดล้อมภายนอกจะเปลี่ยนไป","ธรรมชาติของสิ่งมีชีวิต"],
+["ปฏิกิริยาสร้างสารโมเลกุลใหญ่จากโมเลกุลเล็กเรียกว่าอะไร","แคแทบอลิซึม|แอแนบอลิซึม|ไฮโดรไลซิส|ออกซิเดชัน",1,"แอแนบอลิซึมคือการสร้างและต้องใช้พลังงาน ส่วนแคแทบอลิซึมคือการสลายและปล่อยพลังงานออกมา","ธรรมชาติของสิ่งมีชีวิต"],
+["ลำดับการจัดระบบของสิ่งมีชีวิตข้อใดถูกต้อง","เซลล์ - เนื้อเยื่อ - อวัยวะ - ระบบอวัยวะ|เนื้อเยื่อ - เซลล์ - อวัยวะ - ระบบอวัยวะ|อวัยวะ - เนื้อเยื่อ - เซลล์ - ระบบ|เซลล์ - อวัยวะ - เนื้อเยื่อ - ระบบ",0,"เรียงจากเล็กไปใหญ่: เซลล์ รวมเป็นเนื้อเยื่อ รวมเป็นอวัยวะ รวมเป็นระบบอวัยวะ และเป็นร่างกาย","ธรรมชาติของสิ่งมีชีวิต"],
+["กล้องจุลทรรศน์ใช้แสงมีเลนส์ใกล้วัตถุ 40X และเลนส์ใกล้ตา 10X กำลังขยายรวมเท่าใด","50 เท่า|400 เท่า|4000 เท่า|140 เท่า",1,"กำลังขยายรวม = เลนส์ใกล้วัตถุ x เลนส์ใกล้ตา = 40 x 10 = 400 เท่า","การศึกษาชีววิทยา"],
+["ภาพที่เห็นจากกล้องจุลทรรศน์ใช้แสงเป็นภาพแบบใด","ภาพจริงหัวตั้ง|ภาพเสมือนหัวกลับ|ภาพจริงหัวกลับ|ภาพเสมือนหัวตั้ง",1,"กล้องจุลทรรศน์ใช้แสงให้ภาพเสมือน หัวกลับ และกลับซ้ายขวา ถ้าเลื่อนสไลด์ไปขวา ภาพจะเคลื่อนไปทางซ้าย","การศึกษาชีววิทยา"],
+["เมื่อใช้เลนส์ใกล้วัตถุกำลังขยายสูงสุด ควรปรับภาพด้วยปุ่มใด","ปุ่มปรับภาพหยาบ|ปุ่มปรับภาพละเอียด|ไดอะแฟรม|แท่นวางวัตถุ",1,"ที่กำลังขยายสูงระยะโฟกัสสั้นมาก หากใช้ปุ่มปรับภาพหยาบเลนส์อาจกดสไลด์แตก จึงต้องใช้ปุ่มปรับภาพละเอียด","การศึกษาชีววิทยา"],
+["กล้องจุลทรรศน์อิเล็กตรอนชนิดใดใช้ศึกษาโครงสร้างภายในเซลล์แบบภาพ 2 มิติ","SEM|TEM|Compound microscope|Stereo microscope",1,"TEM ยิงอิเล็กตรอนทะลุผ่านชิ้นตัวอย่างบาง ให้ภาพภายใน 2 มิติ ส่วน SEM ให้ภาพผิวนอก 3 มิติ","การศึกษาชีววิทยา"],
+["1 ไมโครเมตร มีค่าเท่ากับกี่เมตร","10 ยกกำลัง -3|10 ยกกำลัง -6|10 ยกกำลัง -9|10 ยกกำลัง -12",1,"1 micrometer = 10^-6 เมตร ส่วนนาโนเมตร = 10^-9 เมตร เซลล์ส่วนใหญ่มีขนาดราว 10-100 ไมโครเมตร","การศึกษาชีววิทยา"],
+["สาขาวิชาที่ศึกษาการจัดจำแนกและตั้งชื่อสิ่งมีชีวิตคือข้อใด","นิเวศวิทยา|อนุกรมวิธาน|สรีรวิทยา|พันธุศาสตร์",1,"อนุกรมวิธาน (Taxonomy) ศึกษาการจำแนกหมวดหมู่และการตั้งชื่อวิทยาศาสตร์ของสิ่งมีชีวิต","ธรรมชาติของสิ่งมีชีวิต"],
+["การตั้งชื่อวิทยาศาสตร์แบบทวินาม ชื่อแรกคือข้อใด","ชื่อสปีชีส์|ชื่อจีนัส|ชื่อวงศ์|ชื่อผู้ตั้งชื่อ",1,"ระบบทวินามของลินเนียส ชื่อแรกคือจีนัส (ขึ้นต้นตัวใหญ่) ตามด้วยสปีชีส์ (ตัวเล็ก) เขียนตัวเอียงหรือขีดเส้นใต้","ธรรมชาติของสิ่งมีชีวิต"],
+["นกที่อพยพหนีหนาวเป็นตัวอย่างของสมบัติข้อใดของสิ่งมีชีวิต","การสืบพันธุ์|การตอบสนองต่อสิ่งเร้า|การเจริญเติบโต|การรักษาดุลยภาพของน้ำ",1,"การอพยพเป็นพฤติกรรมตอบสนองต่อสิ่งเร้าภายนอก คืออุณหภูมิและช่วงแสงที่เปลี่ยนตามฤดูกาล","ธรรมชาติของสิ่งมีชีวิต"],
+["เมื่อสารเคมีหกใส่ผิวหนังในห้องปฏิบัติการ ควรทำสิ่งใดเป็นอันดับแรก","ทาครีม|ล้างด้วยน้ำสะอาดปริมาณมากทันที|ใช้ผ้าเช็ดแรง ๆ|รอให้แห้งเอง",1,"หลักปฐมพยาบาลคือล้างด้วยน้ำสะอาดไหลผ่านปริมาณมากทันทีอย่างน้อย 15 นาที แล้วแจ้งครูผู้ควบคุม","การศึกษาชีววิทยา"],
+["ข้อใดคือความแตกต่างระหว่างทฤษฎีกับสมมติฐาน","ทฤษฎีคือการเดา สมมติฐานคือข้อเท็จจริง|ทฤษฎีผ่านการทดสอบซ้ำจำนวนมากจนยอมรับกว้างขวาง|ทั้งสองอย่างเหมือนกัน|สมมติฐานเปลี่ยนแปลงไม่ได้",1,"สมมติฐานคือคำอธิบายชั่วคราวที่รอการทดสอบ ส่วนทฤษฎีผ่านการตรวจสอบซ้ำหลายครั้งจนได้รับการยอมรับ แต่ยังแก้ไขได้ถ้ามีหลักฐานใหม่","การศึกษาชีววิทยา"],
+
+/* ---- เคมีที่เป็นพื้นฐานของสิ่งมีชีวิต ---- */
+["ธาตุใดพบมากที่สุดในสารประกอบอินทรีย์ของสิ่งมีชีวิต","เหล็ก|คาร์บอน|โซเดียม|แคลเซียม",1,"คาร์บอนสร้างพันธะโคเวเลนต์ได้ 4 พันธะ จึงต่อเป็นโครงร่างโมเลกุลขนาดใหญ่และหลากหลาย เป็นแกนของสารอินทรีย์ทุกชนิด","สารเคมีในสิ่งมีชีวิต"],
+["แรงยึดเหนี่ยวระหว่างโมเลกุลน้ำคือพันธะชนิดใด","พันธะไอออนิก|พันธะโคเวเลนต์|พันธะไฮโดรเจน|พันธะโลหะ",2,"ภายในโมเลกุลน้ำเป็นพันธะโคเวเลนต์ แต่ระหว่างโมเลกุลน้ำด้วยกันยึดด้วยพันธะไฮโดรเจน ทำให้น้ำมีสมบัติพิเศษ","สารเคมีในสิ่งมีชีวิต"],
+["สมบัติใดของน้ำที่ช่วยให้ร่างกายรักษาอุณหภูมิให้คงที่ได้","แรงตึงผิวสูง|ความจุความร้อนจำเพาะสูง|เป็นตัวทำละลายที่ดี|ความหนาแน่นต่ำเมื่อเป็นน้ำแข็ง",1,"น้ำมีความจุความร้อนจำเพาะสูง จึงดูดหรือคายความร้อนได้มากโดยอุณหภูมิเปลี่ยนน้อย ช่วยให้อุณหภูมิร่างกายเสถียร","สารเคมีในสิ่งมีชีวิต"],
+["น้ำแข็งลอยน้ำได้เพราะเหตุใด","น้ำแข็งเบากว่าอากาศ|พันธะไฮโดรเจนจัดเรียงเป็นโครงผลึกโปร่ง ทำให้ความหนาแน่นต่ำกว่าน้ำ|น้ำแข็งไม่มีมวล|แรงตึงผิวดันไว้",1,"เมื่อแข็งตัว พันธะไฮโดรเจนเรียงเป็นโครงตาข่ายหกเหลี่ยมที่มีช่องว่าง ปริมาตรเพิ่มขึ้นและความหนาแน่นลดลง","สารเคมีในสิ่งมีชีวิต"],
+["น้ำตาลโมเลกุลเดี่ยวข้อใดที่เป็นแหล่งพลังงานหลักของเซลล์","ฟรักโทส|กาแลกโทส|กลูโคส|ไรโบส",2,"กลูโคส (C6H12O6) คือน้ำตาลที่เซลล์นำไปสลายในการหายใจระดับเซลล์เพื่อสร้าง ATP โดยตรง","สารเคมีในสิ่งมีชีวิต"],
+["น้ำตาลซูโครสเกิดจากน้ำตาลโมเลกุลเดี่ยวคู่ใด","กลูโคส + กลูโคส|กลูโคส + ฟรักโทส|กลูโคส + กาแลกโทส|ฟรักโทส + กาแลกโทส",1,"ซูโครส = กลูโคส + ฟรักโทส, มอลโทส = กลูโคส + กลูโคส, แลกโทส = กลูโคส + กาแลกโทส","สารเคมีในสิ่งมีชีวิต"],
+["พอลิแซ็กคาไรด์ที่เป็นแหล่งสะสมพลังงานในเซลล์สัตว์คือข้อใด","แป้ง|ไกลโคเจน|เซลลูโลส|ไคติน",1,"ไกลโคเจนสะสมที่ตับและกล้ามเนื้อของสัตว์ ส่วนแป้งคือแหล่งสะสมของพืช เซลลูโลสเป็นโครงสร้างผนังเซลล์พืช","สารเคมีในสิ่งมีชีวิต"],
+["มนุษย์ย่อยเซลลูโลสไม่ได้เพราะเหตุใด","เซลลูโลสเป็นพิษ|มนุษย์ไม่มีเอนไซม์เซลลูเลสที่ย่อยพันธะเบตา-ไกลโคซิดิก|เซลลูโลสละลายน้ำไม่ได้|เซลลูโลสใหญ่เกินไป",1,"เซลลูโลสต่อกันด้วยพันธะแบบเบตา ต้องใช้เอนไซม์เซลลูเลสที่มนุษย์ไม่มี จึงผ่านออกมาเป็นใยอาหารช่วยการขับถ่าย","สารเคมีในสิ่งมีชีวิต"],
+["พันธะที่เชื่อมระหว่างน้ำตาลโมเลกุลเดี่ยวเรียกว่าอะไร","พันธะเพปไทด์|พันธะไกลโคซิดิก|พันธะเอสเทอร์|พันธะฟอสโฟไดเอสเทอร์",1,"พันธะไกลโคซิดิกเกิดจากปฏิกิริยาควบแน่นระหว่างน้ำตาล 2 โมเลกุล โดยปล่อยน้ำออกมา 1 โมเลกุล","สารเคมีในสิ่งมีชีวิต"],
+["ไตรกลีเซอไรด์ประกอบด้วยอะไรบ้าง","กลีเซอรอล 1 + กรดไขมัน 3|กลีเซอรอล 3 + กรดไขมัน 1|กรดอะมิโน 3|น้ำตาล 3 โมเลกุล",0,"ไตรกลีเซอไรด์เกิดจากกลีเซอรอล 1 โมเลกุลจับกับกรดไขมัน 3 โมเลกุลด้วยพันธะเอสเทอร์ ปล่อยน้ำ 3 โมเลกุล","สารเคมีในสิ่งมีชีวิต"],
+["กรดไขมันไม่อิ่มตัวมีลักษณะใด","มีพันธะเดี่ยวทั้งหมด|มีพันธะคู่ระหว่างคาร์บอนอย่างน้อย 1 ตำแหน่ง|เป็นของแข็งที่อุณหภูมิห้องเสมอ|พบเฉพาะในไขมันสัตว์",1,"พันธะคู่ทำให้สายกรดไขมันหักงอ เรียงชิดกันยาก จุดหลอมเหลวจึงต่ำ เป็นของเหลวที่อุณหภูมิห้อง เช่น น้ำมันพืช","สารเคมีในสิ่งมีชีวิต"],
+["ฟอสโฟลิพิดมีสมบัติพิเศษคืออะไร","ละลายน้ำได้ทั้งโมเลกุล|มีส่วนหัวชอบน้ำและส่วนหางไม่ชอบน้ำ|ไม่มีฟอสเฟต|เป็นโปรตีนชนิดหนึ่ง",1,"ฟอสโฟลิพิดเป็น amphipathic หัวมีฟอสเฟตชอบน้ำ หางไฮโดรคาร์บอนไม่ชอบน้ำ จึงเรียงตัวเป็น 2 ชั้นเป็นเยื่อหุ้มเซลล์","สารเคมีในสิ่งมีชีวิต"],
+["คอเลสเทอรอลจัดเป็นลิพิดประเภทใด","ไตรกลีเซอไรด์|สเตอรอยด์|ขี้ผึ้ง|ฟอสโฟลิพิด",1,"คอเลสเทอรอลเป็นสเตอรอยด์ที่มีวงแหวนคาร์บอน 4 วง เป็นสารตั้งต้นของฮอร์โมนเพศและช่วยควบคุมความยืดหยุ่นของเยื่อหุ้มเซลล์","สารเคมีในสิ่งมีชีวิต"],
+["หน่วยย่อยที่เล็กที่สุดของโปรตีนคือข้อใด","กลูโคส|กรดอะมิโน|นิวคลีโอไทด์|กรดไขมัน",1,"โปรตีนประกอบด้วยกรดอะมิโน 20 ชนิด ต่อกันด้วยพันธะเพปไทด์ แต่ละตัวมีหมู่อะมิโน หมู่คาร์บอกซิล และหมู่ R ที่ต่างกัน","สารเคมีในสิ่งมีชีวิต"],
+["สิ่งที่ทำให้กรดอะมิโนแต่ละชนิดแตกต่างกันคือส่วนใด","หมู่อะมิโน|หมู่คาร์บอกซิล|หมู่ R หรือหมู่ข้างเคียง|อะตอมไฮโดรเจน",2,"กรดอะมิโนทุกตัวมีโครงสร้างหลักเหมือนกัน ต่างกันที่หมู่ R ซึ่งกำหนดสมบัติทางเคมีและการพับตัวของโปรตีน","สารเคมีในสิ่งมีชีวิต"],
+["โครงสร้างโปรตีนระดับทุติยภูมิได้แก่ข้อใด","ลำดับกรดอะมิโน|แอลฟาเฮลิกซ์และเบตาพลีตชีต|การพับเป็นก้อนสามมิติ|การรวมหลายสายพอลิเพปไทด์",1,"ปฐมภูมิ = ลำดับกรดอะมิโน, ทุติยภูมิ = แอลฟาเฮลิกซ์หรือเบตาพลีตชีตจากพันธะไฮโดรเจน, ตติยภูมิ = พับ 3 มิติ, จตุรภูมิ = หลายสายรวมกัน","สารเคมีในสิ่งมีชีวิต"],
+["ไข่ขาวสุกเปลี่ยนจากใสเป็นขาวขุ่นเพราะเหตุใด","โปรตีนถูกย่อยเป็นกรดอะมิโน|โปรตีนเสียสภาพธรรมชาติ|โปรตีนเปลี่ยนเป็นไขมัน|เกิดพันธะเพปไทด์เพิ่ม",1,"ความร้อนทำลายพันธะไฮโดรเจนและพันธะอ่อน ทำให้โปรตีนคลายตัวและจับตัวกันใหม่ เรียกว่าการเสียสภาพ โดยพันธะเพปไทด์ยังอยู่","สารเคมีในสิ่งมีชีวิต"],
+["เอนไซม์ทำงานเร่งปฏิกิริยาโดยวิธีใด","เพิ่มพลังงานกระตุ้น|ลดพลังงานกระตุ้นของปฏิกิริยา|เปลี่ยนชนิดของผลิตภัณฑ์|ให้พลังงานแก่สารตั้งต้น",1,"เอนไซม์เป็นตัวเร่งชีวภาพที่ลดพลังงานกระตุ้น ทำให้ปฏิกิริยาเกิดเร็วขึ้น โดยตัวเอนไซม์ไม่เปลี่ยนแปลงหลังปฏิกิริยา","สารเคมีในสิ่งมีชีวิต"],
+["บริเวณของเอนไซม์ที่จับกับสารตั้งต้นเรียกว่าอะไร","แอกทีฟไซต์|อัลโลสเทอริกไซต์|โคแฟกเตอร์|ซับสเตรต",0,"Active site คือร่องจำเพาะที่ซับสเตรตเข้าจับ ตามแบบจำลองแม่กุญแจ-ลูกกุญแจ หรือแบบเหนี่ยวนำให้เหมาะสม","สารเคมีในสิ่งมีชีวิต"],
+["เมื่ออุณหภูมิสูงเกินจุดเหมาะสม อัตราการทำงานของเอนไซม์เป็นอย่างไร","เพิ่มขึ้นเรื่อย ๆ|ลดลงอย่างรวดเร็วเพราะเอนไซม์เสียสภาพ|คงที่|ไม่เปลี่ยนแปลง",1,"อุณหภูมิสูงเกินไปทำให้โครงสร้าง 3 มิติของเอนไซม์เสียสภาพ แอกทีฟไซต์เปลี่ยนรูป จึงจับกับซับสเตรตไม่ได้","สารเคมีในสิ่งมีชีวิต"],
+["ตัวยับยั้งแบบแข่งขันออกฤทธิ์อย่างไร","จับที่แอกทีฟไซต์แข่งกับซับสเตรต|จับที่ตำแหน่งอื่นแล้วเปลี่ยนรูปเอนไซม์|ทำลายเอนไซม์ถาวร|เพิ่มความเร็วปฏิกิริยา",0,"ตัวยับยั้งแบบแข่งขันมีรูปร่างคล้ายซับสเตรตจึงแย่งจับแอกทีฟไซต์ แก้ได้โดยเพิ่มความเข้มข้นของซับสเตรต","สารเคมีในสิ่งมีชีวิต"],
+["หน่วยย่อยของกรดนิวคลีอิกประกอบด้วยอะไรบ้าง","น้ำตาล 5 คาร์บอน + หมู่ฟอสเฟต + เบสไนโตรเจน|กลีเซอรอล + กรดไขมัน|กรดอะมิโน + ฟอสเฟต|กลูโคส + เบส",0,"นิวคลีโอไทด์ 1 หน่วย = น้ำตาลเพนโทส + หมู่ฟอสเฟต + เบสไนโตรเจน ต่อกันด้วยพันธะฟอสโฟไดเอสเทอร์","สารเคมีในสิ่งมีชีวิต"],
+["เบสคู่สมใน DNA คู่ใดถูกต้อง","A คู่กับ G|A คู่กับ T|C คู่กับ T|G คู่กับ U",1,"ใน DNA: A จับกับ T ด้วยพันธะไฮโดรเจน 2 พันธะ และ G จับกับ C ด้วยพันธะไฮโดรเจน 3 พันธะ","สารเคมีในสิ่งมีชีวิต"],
+["ข้อใดคือความแตกต่างระหว่าง DNA กับ RNA","DNA มีเบสยูราซิล|RNA มีน้ำตาลไรโบสและเบสยูราซิล|DNA เป็นสายเดี่ยว|RNA มีไทมีน",1,"RNA มีน้ำตาลไรโบส เป็นสายเดี่ยว และใช้ยูราซิลแทนไทมีน ส่วน DNA มีดีออกซีไรโบส เป็นเกลียวคู่ และมีไทมีน","สารเคมีในสิ่งมีชีวิต"],
+["การทดสอบน้ำตาลรีดิวซ์ด้วยสารละลายเบเนดิกต์ ผลบวกให้ตะกอนสีใด","สีม่วง|สีแดงอิฐ|สีน้ำเงินเข้ม|สีเขียวมรกต",1,"เบเนดิกต์ให้ตะกอนสีแดงอิฐ (หรือส้ม-เหลืองตามความเข้มข้น) เมื่อต้มกับน้ำตาลรีดิวซ์ เช่น กลูโคส","สารเคมีในสิ่งมีชีวิต"],
+["สารละลายไอโอดีนใช้ทดสอบสารใด และให้สีอะไร","โปรตีน สีม่วง|แป้ง สีน้ำเงินเข้มถึงม่วงดำ|ไขมัน สีแดง|น้ำตาล สีเขียว",1,"ไอโอดีนแทรกในเกลียวของอะไมโลสในแป้ง ทำให้เกิดสีน้ำเงินเข้มถึงม่วงดำ","สารเคมีในสิ่งมีชีวิต"],
+["การทดสอบโปรตีนด้วยสารละลายไบยูเรตให้ผลบวกเป็นสีใด","สีแดงอิฐ|สีม่วงหรือชมพูม่วง|สีดำ|สีเหลือง",1,"ไบยูเรตทำปฏิกิริยากับพันธะเพปไทด์ ให้สารละลายสีม่วงหรือชมพูอมม่วง ยิ่งเข้มยิ่งมีโปรตีนมาก","สารเคมีในสิ่งมีชีวิต"],
+["ปฏิกิริยาไฮโดรไลซิสมีลักษณะอย่างไร","สร้างพันธะและปล่อยน้ำ|สลายพันธะโดยใช้น้ำ|สร้างพลังงาน ATP|เปลี่ยนน้ำเป็นออกซิเจน",1,"ไฮโดรไลซิสคือการใช้น้ำเข้าไปตัดพันธะ ทำให้โมเลกุลใหญ่แตกเป็นโมเลกุลเล็ก เช่น การย่อยอาหาร ตรงข้ามกับปฏิกิริยาควบแน่น","สารเคมีในสิ่งมีชีวิต"],
+["ธาตุใดเป็นองค์ประกอบของโปรตีนแต่ไม่พบในคาร์โบไฮเดรตและลิพิดทั่วไป","คาร์บอน|ไฮโดรเจน|ไนโตรเจน|ออกซิเจน",2,"โปรตีนมีหมู่อะมิโนที่มีไนโตรเจนเป็นองค์ประกอบ ขณะที่คาร์โบไฮเดรตและลิพิดมีเพียง C, H, O เป็นหลัก","สารเคมีในสิ่งมีชีวิต"],
+["ATP เก็บพลังงานไว้ที่ส่วนใด","เบสอะดีนีน|น้ำตาลไรโบส|พันธะระหว่างหมู่ฟอสเฟต|สายพอลิเพปไทด์",2,"พลังงานถูกเก็บในพันธะพลังงานสูงระหว่างหมู่ฟอสเฟต เมื่อสลาย ATP เป็น ADP + Pi จะปล่อยพลังงานให้เซลล์ใช้","สารเคมีในสิ่งมีชีวิต"],
+
+/* ---- เซลล์และการลำเลียงสาร ---- */
+["ข้อใดคือความแตกต่างสำคัญระหว่างเซลล์โพรคาริโอตกับยูคาริโอต","โพรคาริโอตไม่มีเยื่อหุ้มนิวเคลียส|โพรคาริโอตไม่มี DNA|ยูคาริโอตไม่มีไรโบโซม|ยูคาริโอตไม่มีเยื่อหุ้มเซลล์",0,"เซลล์โพรคาริโอต เช่น แบคทีเรีย ไม่มีเยื่อหุ้มนิวเคลียสและออร์แกเนลล์ที่มีเยื่อหุ้ม DNA อยู่เป็นวงในบริเวณนิวคลีออยด์","เซลล์"],
+["ผนังเซลล์ของพืชประกอบด้วยสารใดเป็นหลัก","ไคติน|เพปทิโดไกลแคน|เซลลูโลส|ลิกนินอย่างเดียว",2,"ผนังเซลล์พืชทำจากเซลลูโลส ส่วนราใช้ไคติน และแบคทีเรียใช้เพปทิโดไกลแคน","เซลล์"],
+["แบบจำลองเยื่อหุ้มเซลล์ที่ยอมรับในปัจจุบันคือข้อใด","แบบจำลองแซนด์วิช|แบบจำลองของไหลโมเสก|แบบจำลองแข็งตัว|แบบจำลองเกลียวคู่",1,"Fluid mosaic model โดย Singer และ Nicolson อธิบายว่าเยื่อหุ้มเซลล์เป็นฟอสโฟลิพิด 2 ชั้นที่เคลื่อนที่ได้ มีโปรตีนแทรกกระจายเหมือนโมเสก","เซลล์"],
+["ออร์แกเนลล์ใดเป็นแหล่งสร้าง ATP ของเซลล์","ไรโบโซม|ไมโทคอนเดรีย|กอลจิคอมเพล็กซ์|ไลโซโซม",1,"ไมโทคอนเดรียเป็นแหล่งหายใจระดับเซลล์ มีเยื่อ 2 ชั้น ชั้นในพับเป็นคริสตีเพิ่มพื้นที่ผิวสำหรับสร้าง ATP","เซลล์"],
+["ออร์แกเนลล์ใดมี DNA เป็นของตัวเอง","ไลโซโซมและกอลจิ|ไมโทคอนเดรียและคลอโรพลาสต์|ไรโบโซมและ ER|แวคิวโอลและเซนทริโอล",1,"ไมโทคอนเดรียและคลอโรพลาสต์มี DNA วงกลมและไรโบโซมของตัวเอง สนับสนุนทฤษฎีเอนโดซิมไบโอซิส","เซลล์"],
+["นิวคลีโอลัสทำหน้าที่ใด","ควบคุมการแบ่งเซลล์|สร้างไรโบโซมอลอาร์เอ็นเอและประกอบไรโบโซม|ย่อยสลายสาร|ขนส่งโปรตีน",1,"นิวคลีโอลัสคือบริเวณเข้มในนิวเคลียส ทำหน้าที่สังเคราะห์ rRNA และประกอบหน่วยย่อยของไรโบโซม","เซลล์"],
+["ไรโบโซมทำหน้าที่ใด","สังเคราะห์โปรตีน|สังเคราะห์ลิพิด|ย่อยสลายของเสีย|สร้างพลังงาน",0,"ไรโบโซมเป็นแหล่งแปลรหัสจาก mRNA เป็นสายพอลิเพปไทด์ พบทั้งลอยอิสระในไซโทพลาซึมและเกาะบน ER แบบขรุขระ","เซลล์"],
+["เอนโดพลาสมิกเรติคูลัมแบบเรียบทำหน้าที่ใด","สังเคราะห์โปรตีนส่งออก|สังเคราะห์ลิพิดและกำจัดสารพิษ|แบ่งเซลล์|สร้าง ATP",1,"SER สร้างลิพิด สเตอรอยด์ เก็บแคลเซียมไอออน และกำจัดสารพิษ (พบมากในเซลล์ตับ) ส่วน RER มีไรโบโซมเกาะเพื่อสร้างโปรตีน","เซลล์"],
+["กอลจิคอมเพล็กซ์มีหน้าที่หลักคืออะไร","สร้าง ATP|ปรับแต่ง บรรจุ และส่งโปรตีนออกนอกเซลล์|สังเคราะห์ DNA|ควบคุมการเข้าออกของสาร",1,"กอลจิเปรียบเหมือนไปรษณีย์ของเซลล์ รับโปรตีนจาก ER มาปรับแต่ง คัดแยก บรรจุในเวสิเคิล แล้วส่งไปยังจุดหมาย","เซลล์"],
+["ไลโซโซมบรรจุสิ่งใดไว้ภายใน","ATP|เอนไซม์ย่อยสลาย|คลอโรฟิลล์|DNA",1,"ไลโซโซมบรรจุเอนไซม์ไฮโดรไลติกสำหรับย่อยสารอาหาร ออร์แกเนลล์ที่เสื่อมสภาพ และเชื้อโรค จึงได้ชื่อว่าถุงฆ่าตัวตายของเซลล์","เซลล์"],
+["โครงสร้างใดพบในเซลล์พืชแต่ไม่พบในเซลล์สัตว์","ไมโทคอนเดรีย|คลอโรพลาสต์และผนังเซลล์|ไรโบโซม|นิวเคลียส",1,"เซลล์พืชมีผนังเซลล์ คลอโรพลาสต์ และแวคิวโอลกลางขนาดใหญ่ ส่วนเซลล์สัตว์มีเซนทริโอลและไลโซโซมที่เด่นกว่า","เซลล์"],
+["บริเวณใดของคลอโรพลาสต์ที่เกิดปฏิกิริยาแสง","สโตรมา|เยื่อไทลาคอยด์|เยื่อชั้นนอก|ช่องว่างระหว่างเยื่อ",1,"ปฏิกิริยาแสงเกิดที่เยื่อไทลาคอยด์ซึ่งมีคลอโรฟิลล์อยู่ ส่วนการตรึงคาร์บอน (วัฏจักรคัลวิน) เกิดที่สโตรมา","เซลล์"],
+["เซนทริโอลทำหน้าที่ใดในเซลล์สัตว์","ย่อยสลายสาร|สร้างเส้นใยสปินเดิลในการแบ่งเซลล์|สร้างพลังงาน|สังเคราะห์โปรตีน",1,"เซนทริโอลอยู่ในเซนโทรโซม ทำหน้าที่จัดระเบียบไมโครทิวบูลเป็นเส้นใยสปินเดิลเพื่อดึงโครโมโซมขณะแบ่งเซลล์","เซลล์"],
+["การแพร่ (diffusion) คือการเคลื่อนที่ของสารในลักษณะใด","จากความเข้มข้นต่ำไปสูง โดยใช้พลังงาน|จากความเข้มข้นสูงไปต่ำ โดยไม่ใช้พลังงาน|ผ่านโปรตีนตัวพาเท่านั้น|เฉพาะโมเลกุลน้ำ",1,"การแพร่เป็นการเคลื่อนที่ตามความลาดเข้มข้น (สูงไปต่ำ) จนเกิดสมดุล ไม่ต้องใช้พลังงานจากเซลล์","เซลล์"],
+["ออสโมซิสคือการแพร่ของสารใด","กลูโคส|น้ำ|ไอออน|โปรตีน",1,"ออสโมซิสคือการแพร่ของน้ำผ่านเยื่อเลือกผ่าน จากบริเวณที่มีความเข้มข้นของสารละลายต่ำไปยังบริเวณที่เข้มข้นสูงกว่า","เซลล์"],
+["เมื่อนำเซลล์เม็ดเลือดแดงใส่ในน้ำกลั่น จะเกิดอะไรขึ้น","เซลล์เหี่ยว|เซลล์บวมและแตก|เซลล์ไม่เปลี่ยนแปลง|เซลล์แบ่งตัว",1,"น้ำกลั่นเป็นสารละลายไฮโพโทนิก น้ำจึงออสโมซิสเข้าสู่เซลล์จำนวนมาก เซลล์เม็ดเลือดแดงไม่มีผนังเซลล์จึงบวมและแตก (hemolysis)","เซลล์"],
+["ปรากฏการณ์พลาสโมไลซิสในเซลล์พืชเกิดเมื่อใด","อยู่ในสารละลายไฮโพโทนิก|อยู่ในสารละลายไฮเพอร์โทนิก|อยู่ในสารละลายไอโซโทนิก|อยู่ในน้ำกลั่น",1,"ในสารละลายไฮเพอร์โทนิก น้ำออกจากเซลล์ ทำให้เยื่อหุ้มเซลล์หดแยกจากผนังเซลล์ เรียกว่า plasmolysis","เซลล์"],
+["แอกทีฟทรานสปอร์ตมีลักษณะสำคัญคืออะไร","ลำเลียงตามความลาดเข้มข้นโดยไม่ใช้พลังงาน|ลำเลียงทวนความลาดเข้มข้นโดยใช้พลังงาน ATP|เกิดเฉพาะในเซลล์พืช|ใช้ได้เฉพาะกับน้ำ",1,"แอกทีฟทรานสปอร์ตลำเลียงสารจากที่เข้มข้นต่ำไปสูง ต้องใช้ ATP และโปรตีนตัวพา เช่น โซเดียม-โพแทสเซียมปั๊ม","เซลล์"],
+["โซเดียม-โพแทสเซียมปั๊มลำเลียงไอออนในอัตราส่วนใด","Na 3 ออก : K 2 เข้า|Na 2 ออก : K 3 เข้า|Na 1 ออก : K 1 เข้า|Na 3 เข้า : K 2 ออก",0,"ปั๊มนี้ใช้ ATP 1 โมเลกุล ส่ง Na+ ออกนอกเซลล์ 3 ไอออน และนำ K+ เข้าเซลล์ 2 ไอออน ทำให้เกิดความต่างศักย์ที่เยื่อหุ้มเซลล์","เซลล์"],
+["เซลล์เม็ดเลือดขาวกลืนกินแบคทีเรียด้วยกระบวนการใด","พิโนไซโทซิส|ฟาโกไซโทซิส|เอกโซไซโทซิส|ออสโมซิส",1,"ฟาโกไซโทซิสคือการยื่นเยื่อหุ้มเซลล์โอบอนุภาคของแข็งขนาดใหญ่เข้ามาเป็นถุง แล้วรวมกับไลโซโซมเพื่อย่อย","เซลล์"],
+["การลำเลียงแบบฟาซิลิเทตดิฟฟิวชันต่างจากการแพร่ธรรมดาอย่างไร","ต้องใช้พลังงาน ATP|ต้องอาศัยโปรตีนตัวพาหรือช่องโปรตีน|เคลื่อนที่ทวนความเข้มข้น|เกิดเฉพาะกับแก๊ส",1,"ฟาซิลิเทตดิฟฟิวชันยังเคลื่อนตามความลาดเข้มข้นและไม่ใช้พลังงาน แต่ต้องผ่านโปรตีน เช่น การลำเลียงกลูโคสเข้าเซลล์","เซลล์"],
+["แก๊สออกซิเจนผ่านเยื่อหุ้มเซลล์ด้วยวิธีใด","แอกทีฟทรานสปอร์ต|การแพร่ผ่านชั้นฟอสโฟลิพิดโดยตรง|เอนโดไซโทซิส|ผ่านช่องแอควาพอริน",1,"โมเลกุลเล็กไม่มีขั้ว เช่น O2 และ CO2 แพร่ผ่านชั้นฟอสโฟลิพิดได้โดยตรงโดยไม่ต้องใช้โปรตีนหรือพลังงาน","เซลล์"],
+["ทฤษฎีเอนโดซิมไบโอซิสอธิบายเรื่องใด","การเกิดผนังเซลล์|กำเนิดไมโทคอนเดรียและคลอโรพลาสต์จากแบคทีเรียที่ถูกกลืนเข้าไป|การแบ่งเซลล์|การสังเคราะห์โปรตีน",1,"ทฤษฎีนี้เสนอว่าเซลล์ยูคาริโอตยุคแรกกลืนแบคทีเรียเข้าไปแล้วอยู่ร่วมกันแบบพึ่งพา กลายเป็นไมโทคอนเดรียและคลอโรพลาสต์","เซลล์"],
+["โครงสร้างใดทำหน้าที่ค้ำจุนรูปร่างและการเคลื่อนที่ภายในเซลล์","ผนังเซลล์|ไซโทสเกเลตัน|เยื่อหุ้มนิวเคลียส|แวคิวโอล",1,"ไซโทสเกเลตันประกอบด้วยไมโครทิวบูล ไมโครฟิลาเมนต์ และอินเทอร์มีเดียตฟิลาเมนต์ ช่วยค้ำจุนรูปร่างและขนส่งภายในเซลล์","เซลล์"],
+["แวคิวโอลกลางขนาดใหญ่ในเซลล์พืชมีหน้าที่ใด","สร้างพลังงาน|เก็บน้ำ สารอาหาร และรักษาแรงดันเต่ง|สังเคราะห์โปรตีน|แบ่งเซลล์",1,"แวคิวโอลกลางเก็บน้ำและสารต่าง ๆ ช่วยสร้างแรงดันเต่ง (turgor pressure) ทำให้เซลล์พืชเต่งตึงและลำต้นตั้งตรง","เซลล์"],
+["ไรโบโซมของเซลล์โพรคาริโอตมีขนาดเท่าใด","70S|80S|60S|40S",0,"โพรคาริโอตมีไรโบโซมขนาด 70S ส่วนยูคาริโอตมี 80S ความแตกต่างนี้เป็นเป้าหมายของยาปฏิชีวนะหลายชนิด","เซลล์"],
+
+/* ---- การแบ่งเซลล์ ---- */
+["วัฏจักรของเซลล์ประกอบด้วยระยะใดบ้างตามลำดับ","G1 - S - G2 - M|S - G1 - G2 - M|M - G1 - S - G2|G1 - G2 - S - M",0,"วัฏจักรเซลล์คือ อินเตอร์เฟส (G1 เจริญเติบโต, S จำลอง DNA, G2 เตรียมแบ่ง) แล้วตามด้วยระยะ M คือการแบ่งนิวเคลียสและไซโทพลาซึม","การแบ่งเซลล์"],
+["การจำลอง DNA เกิดขึ้นในระยะใด","G1|S|G2|โพรเฟส",1,"ระยะ S (Synthesis) คือช่วงที่ DNA จำลองตัวเอง ทำให้แต่ละโครโมโซมมี 2 โครมาทิดที่เหมือนกันติดกันที่เซนโทรเมียร์","การแบ่งเซลล์"],
+["ระยะใดของไมโทซิสที่โครโมโซมเรียงตัวกลางเซลล์","โพรเฟส|เมทาเฟส|แอนาเฟส|เทโลเฟส",1,"เมทาเฟส โครโมโซมเรียงตัวในแนวกึ่งกลางเซลล์ เป็นระยะที่เห็นรูปร่างโครโมโซมชัดที่สุด เหมาะกับการนับจำนวน","การแบ่งเซลล์"],
+["โครมาทิดพี่น้องแยกออกจากกันในระยะใด","โพรเฟส|เมทาเฟส|แอนาเฟส|เทโลเฟส",2,"ในแอนาเฟส เซนโทรเมียร์แยกออก เส้นใยสปินเดิลดึงโครมาทิดพี่น้องไปยังขั้วตรงข้ามของเซลล์","การแบ่งเซลล์"],
+["ผลลัพธ์ของการแบ่งเซลล์แบบไมโทซิสคือข้อใด","เซลล์ลูก 2 เซลล์ มีโครโมโซมเท่าเซลล์แม่|เซลล์ลูก 4 เซลล์ ลดจำนวนครึ่งหนึ่ง|เซลล์ลูก 2 เซลล์ ลดจำนวนครึ่งหนึ่ง|เซลล์ลูก 4 เซลล์ เท่าเซลล์แม่",0,"ไมโทซิสได้เซลล์ลูก 2 เซลล์ที่มีโครโมโซมเท่าเดิม (2n เป็น 2n) ใช้ในการเจริญเติบโตและซ่อมแซมส่วนที่สึกหรอ","การแบ่งเซลล์"],
+["ครอสซิงโอเวอร์เกิดขึ้นในระยะใด","โพรเฟส I ของไมโอซิส|เมทาเฟส I|แอนาเฟส II|โพรเฟสของไมโทซิส",0,"ครอสซิงโอเวอร์เกิดในโพรเฟส I ช่วงแพคีทีน เมื่อโฮโมโลกัสโครโมโซมเข้าคู่กันแล้วแลกเปลี่ยนชิ้นส่วนกันที่ไคแอสมา","การแบ่งเซลล์"],
+["ไมโอซิสมีความสำคัญอย่างไร","เพิ่มจำนวนเซลล์ร่างกาย|ลดจำนวนโครโมโซมลงครึ่งหนึ่งเพื่อสร้างเซลล์สืบพันธุ์|ซ่อมแซมบาดแผล|สร้างเซลล์ผิวหนัง",1,"ไมโอซิสลดโครโมโซมจาก 2n เป็น n ทำให้เมื่อปฏิสนธิแล้วจำนวนโครโมโซมของลูกคงที่ และยังสร้างความหลากหลายทางพันธุกรรม","การแบ่งเซลล์"],
+["ผลลัพธ์สุดท้ายของไมโอซิสจากเซลล์ตั้งต้น 1 เซลล์คือข้อใด","2 เซลล์ 2n|4 เซลล์ n|4 เซลล์ 2n|2 เซลล์ n",1,"ไมโอซิส I ลดจำนวนโครโมโซมได้ 2 เซลล์ (n) แล้วไมโอซิส II แยกโครมาทิด ได้ทั้งหมด 4 เซลล์ที่มีโครโมโซม n","การแบ่งเซลล์"],
+["มนุษย์มีโครโมโซมในเซลล์ร่างกายกี่แท่ง","23 แท่ง|46 แท่ง|44 แท่ง|48 แท่ง",1,"เซลล์ร่างกายมนุษย์มี 46 แท่ง (23 คู่) ประกอบด้วยออโตโซม 22 คู่ และโครโมโซมเพศ 1 คู่ ส่วนเซลล์สืบพันธุ์มี 23 แท่ง","การแบ่งเซลล์"],
+["การแบ่งไซโทพลาซึมของเซลล์พืชแตกต่างจากเซลล์สัตว์อย่างไร","พืชเกิดร่องคอด สัตว์สร้างแผ่นกั้นเซลล์|พืชสร้างแผ่นกั้นเซลล์ สัตว์เกิดร่องคอด|เหมือนกันทุกประการ|พืชไม่มีการแบ่งไซโทพลาซึม",1,"เซลล์พืชมีผนังเซลล์แข็ง จึงสร้างแผ่นกั้นเซลล์จากกลางออกไป ส่วนเซลล์สัตว์ใช้วงแหวนไมโครฟิลาเมนต์รัดเป็นร่องคอด","การแบ่งเซลล์"],
+["บริเวณที่โครมาทิดพี่น้อง 2 เส้นเชื่อมติดกันเรียกว่าอะไร","เทโลเมียร์|เซนโทรเมียร์|ไคแอสมา|สปินเดิล",1,"เซนโทรเมียร์คือจุดคอดที่ยึดโครมาทิดพี่น้อง และเป็นตำแหน่งที่ไคนีโทคอร์เกาะเพื่อให้เส้นใยสปินเดิลมาดึง","การแบ่งเซลล์"],
+["นอนดิสจังก์ชันคืออะไร","การแลกเปลี่ยนชิ้นส่วนโครโมโซม|การที่โครโมโซมไม่แยกออกจากกันขณะแบ่งเซลล์|การจำลอง DNA ผิดพลาด|การที่เซลล์หยุดแบ่งตัว",1,"นอนดิสจังก์ชันคือความผิดปกติที่โครโมโซมคู่เหมือนหรือโครมาทิดไม่แยกจากกัน ทำให้เซลล์ลูกมีจำนวนโครโมโซมผิดปกติ เช่น กลุ่มอาการดาวน์","การแบ่งเซลล์"],
+["ความหลากหลายทางพันธุกรรมจากไมโอซิสเกิดจากอะไรเป็นหลัก","การจำลอง DNA|ครอสซิงโอเวอร์และการจัดเรียงตัวอย่างอิสระของโครโมโซม|การแบ่งไซโทพลาซึม|การสร้างสปินเดิล",1,"ครอสซิงโอเวอร์ในโพรเฟส I และการเรียงตัวอย่างอิสระของโฮโมโลกัสโครโมโซมในเมทาเฟส I ทำให้เกิดการผสมผสานของยีนที่หลากหลายมาก","การแบ่งเซลล์"],
+["ระยะใดที่เยื่อหุ้มนิวเคลียสเริ่มสลายไป","โพรเฟส|เมทาเฟส|แอนาเฟส|เทโลเฟส",0,"ในโพรเฟส โครมาทินขดแน่นเป็นโครโมโซม นิวคลีโอลัสหายไป และเยื่อหุ้มนิวเคลียสเริ่มสลาย เพื่อให้สปินเดิลเข้าถึงโครโมโซมได้","การแบ่งเซลล์"],
+["ไมโอซิส II มีลักษณะคล้ายกับกระบวนการใด","ไมโทซิสแต่เซลล์มีโครโมโซมชุดเดียว|ไมโอซิส I ทุกประการ|การจำลอง DNA|อินเตอร์เฟส",0,"ไมโอซิส II คล้ายไมโทซิสคือแยกโครมาทิดพี่น้องออกจากกัน แต่เกิดในเซลล์ที่มีโครโมโซมชุดเดียว (n) และไม่มีการจำลอง DNA ก่อนหน้า","การแบ่งเซลล์"],
+["เซลล์ที่แบ่งตัวแบบไมโทซิสในร่างกายมนุษย์คือข้อใด","เซลล์อสุจิ|เซลล์ไข่|เซลล์ผิวหนัง|สเปิร์มมาทิด",2,"เซลล์ร่างกาย เช่น เซลล์ผิวหนัง เซลล์ไขกระดูก แบ่งแบบไมโทซิสเพื่อเจริญเติบโตและซ่อมแซม ส่วนเซลล์สืบพันธุ์สร้างจากไมโอซิส","การแบ่งเซลล์"],
+["โฮโมโลกัสโครโมโซมแยกออกจากกันในระยะใด","แอนาเฟส I|แอนาเฟส II|เมทาเฟส I|เทโลเฟส II",0,"แอนาเฟส I คือระยะที่โฮโมโลกัสโครโมโซมแยกไปคนละขั้ว จึงเป็นจุดที่จำนวนโครโมโซมลดลงครึ่งหนึ่ง ส่วนแอนาเฟส II แยกโครมาทิด","การแบ่งเซลล์"],
+["การควบคุมวัฏจักรเซลล์ผิดปกติจนเซลล์แบ่งตัวไม่หยุดจะนำไปสู่สิ่งใด","การเจริญเติบโตปกติ|การเกิดเนื้องอกหรือมะเร็ง|การตายของเซลล์ตามโปรแกรม|การสร้างเซลล์สืบพันธุ์",1,"เมื่อจุดตรวจสอบของวัฏจักรเซลล์เสียหาย เซลล์จะแบ่งตัวไม่หยุดและไม่ตอบสนองต่อสัญญาณยับยั้ง กลายเป็นเนื้องอกและมะเร็ง","การแบ่งเซลล์"],
+["โครมาทินกับโครโมโซมต่างกันอย่างไร","เป็นคนละสารกัน|โครมาทินคือสายดีเอ็นเอที่คลายตัว ส่วนโครโมโซมคือสายที่ขดแน่น|โครมาทินพบเฉพาะในพืช|โครโมโซมไม่มีโปรตีน",1,"ทั้งคู่คือ DNA กับโปรตีนฮิสโตนชุดเดียวกัน ต่างที่สภาพการขด ช่วงอินเตอร์เฟสคลายเป็นโครมาทิน ช่วงแบ่งเซลล์ขดแน่นเป็นโครโมโซม","การแบ่งเซลล์"],
+["เซลล์ที่หยุดแบ่งตัวถาวร เช่น เซลล์ประสาท จะอยู่ในระยะใด","G0|S|G2|M",0,"ระยะ G0 คือระยะพักที่เซลล์ออกจากวัฏจักรเซลล์ ทำหน้าที่เฉพาะทางโดยไม่แบ่งตัวอีก เช่น เซลล์ประสาทและเซลล์กล้ามเนื้อหัวใจ","การแบ่งเซลล์"]
+];
+const BANK=RAW.map((r,i)=>({id:'b'+i,q:r[0],c:r[1].split('|'),a:r[2],e:r[3],t:r[4]}));
+const TOPICS=[...new Set(BANK.map(q=>q.t))];
+
+/* =========================================================
+   2) เครื่องสร้างโจทย์อัตโนมัติ
+   ========================================================= */
+const ri=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+function build(q,correct,wrongs,e,t){const c=shuffle([correct,...wrongs]);return{id:'g'+Math.random(),q,c,a:c.indexOf(correct),e,t,gen:true}}
+const GEN={
+ 'การแบ่งเซลล์':[
+  ()=>{const n=ri(4,40)*2;return build(`สิ่งมีชีวิตชนิดหนึ่งมีโครโมโซมในเซลล์ร่างกาย 2n = ${n} เซลล์สืบพันธุ์ที่ได้จากไมโอซิสจะมีโครโมโซมกี่แท่ง`,
+    `${n/2} แท่ง`,[`${n} แท่ง`,`${n*2} แท่ง`,`${n/4} แท่ง`],
+    `ไมโอซิสลดจำนวนโครโมโซมลงครึ่งหนึ่ง จาก 2n = ${n} เหลือ n = ${n/2} แท่ง ในเซลล์สืบพันธุ์แต่ละเซลล์ (ได้ทั้งหมด 4 เซลล์)`,'การแบ่งเซลล์')},
+  ()=>{const n=ri(4,30)*2;return build(`เซลล์ที่มีโครโมโซม 2n = ${n} แบ่งแบบไมโทซิส 1 ครั้ง เซลล์ลูกแต่ละเซลล์มีโครโมโซมกี่แท่ง`,
+    `${n} แท่ง`,[`${n/2} แท่ง`,`${n*2} แท่ง`,`${n-2} แท่ง`],
+    `ไมโทซิสให้เซลล์ลูก 2 เซลล์ที่มีจำนวนโครโมโซมเท่าเดิมทุกประการ คือ ${n} แท่ง เพราะมีการจำลอง DNA ในระยะ S ก่อนแบ่ง`,'การแบ่งเซลล์')},
+  ()=>{const k=ri(2,9);return build(`เซลล์ 1 เซลล์แบ่งแบบไมโทซิสติดต่อกัน ${k} ครั้ง จะได้เซลล์ทั้งหมดกี่เซลล์`,
+    `${2**k} เซลล์`,[`${2*k} เซลล์`,`${2**k/2} เซลล์`,`${2**k+2} เซลล์`],
+    `การแบ่งไมโทซิส n ครั้ง ได้เซลล์ = 2 ยกกำลัง n = 2^${k} = ${2**k} เซลล์`,'การแบ่งเซลล์')},
+  ()=>{const c=ri(3,12);return build(`เซลล์ตั้งต้น ${c} เซลล์เข้าสู่กระบวนการไมโอซิสอย่างสมบูรณ์ จะได้เซลล์สืบพันธุ์ทั้งหมดกี่เซลล์`,
+    `${c*4} เซลล์`,[`${c*2} เซลล์`,`${c} เซลล์`,`${c*8} เซลล์`],
+    `ไมโอซิส 1 เซลล์ให้เซลล์ลูก 4 เซลล์ ดังนั้น ${c} x 4 = ${c*4} เซลล์`,'การแบ่งเซลล์')}],
+ 'การศึกษาชีววิทยา':[
+  ()=>{const o=[4,10,40,100][ri(0,3)],e2=[5,10,15][ri(0,2)];return build(`กล้องจุลทรรศน์ใช้แสงมีเลนส์ใกล้วัตถุ ${o}X และเลนส์ใกล้ตา ${e2}X กำลังขยายรวมเท่าใด`,
+    `${o*e2} เท่า`,[`${o+e2} เท่า`,`${o*e2*2} เท่า`,`${Math.round(o*e2/2)} เท่า`],
+    `กำลังขยายรวม = เลนส์ใกล้วัตถุ x เลนส์ใกล้ตา = ${o} x ${e2} = ${o*e2} เท่า`,'การศึกษาชีววิทยา')},
+  ()=>{const um=ri(2,90);return build(`เซลล์หนึ่งมีขนาด ${um} ไมโครเมตร คิดเป็นกี่มิลลิเมตร`,
+    `${(um/1000).toFixed(3)} มิลลิเมตร`,[`${(um/100).toFixed(3)} มิลลิเมตร`,`${(um*1000)} มิลลิเมตร`,`${(um/10).toFixed(3)} มิลลิเมตร`],
+    `1 มิลลิเมตร = 1000 ไมโครเมตร ดังนั้น ${um} ไมโครเมตร = ${um}/1000 = ${(um/1000).toFixed(3)} มิลลิเมตร`,'การศึกษาชีววิทยา')}],
+ 'สารเคมีในสิ่งมีชีวิต':[
+  ()=>{const n=ri(5,60);return build(`สายพอลิเพปไทด์เส้นหนึ่งประกอบด้วยกรดอะมิโน ${n} โมเลกุล จะมีพันธะเพปไทด์กี่พันธะ`,
+    `${n-1} พันธะ`,[`${n} พันธะ`,`${n+1} พันธะ`,`${n*2} พันธะ`],
+    `กรดอะมิโน n ตัวต่อกันเป็นสายเดียว เกิดพันธะเพปไทด์ = n - 1 = ${n-1} พันธะ และปล่อยน้ำ ${n-1} โมเลกุล`,'สารเคมีในสิ่งมีชีวิต')},
+  ()=>{const total=ri(50,300)*2,A=ri(10,Math.floor(total/4)),G=(total-2*A)/2;
+    return build(`DNA เกลียวคู่โมเลกุลหนึ่งมีนิวคลีโอไทด์ทั้งหมด ${total} หน่วย และมีเบสอะดีนีน (A) ${A} หน่วย จะมีเบสกวานีน (G) กี่หน่วย`,
+    `${G} หน่วย`,[`${A} หน่วย`,`${total-A} หน่วย`,`${Math.round(G/2)} หน่วย`],
+    `กฎของชาร์การ์ฟ: A = T = ${A} ดังนั้น G + C = ${total} - ${2*A} = ${total-2*A} และเนื่องจาก G = C จึงได้ G = ${G} หน่วย`,'สารเคมีในสิ่งมีชีวิต')},
+  ()=>{const n=ri(3,25);return build(`น้ำตาลโมเลกุลเดี่ยว ${n} โมเลกุลเชื่อมต่อกันเป็นสายพอลิแซ็กคาไรด์ จะเกิดพันธะไกลโคซิดิกกี่พันธะ`,
+    `${n-1} พันธะ`,[`${n} พันธะ`,`${n+1} พันธะ`,`${n*2-1} พันธะ`],
+    `การเชื่อมหน่วยย่อย n หน่วยเป็นสายเดียว เกิดพันธะ = n - 1 = ${n-1} พันธะ พร้อมปล่อยน้ำ ${n-1} โมเลกุล`,'สารเคมีในสิ่งมีชีวิต')}],
+ 'ธรรมชาติของสิ่งมีชีวิต':[
+  ()=>{const lv=['เซลล์','เนื้อเยื่อ','อวัยวะ','ระบบอวัยวะ','ร่างกาย'],i=ri(0,3);
+    return build(`ในลำดับการจัดระบบของสิ่งมีชีวิต หน่วยที่อยู่ถัดขึ้นไปจาก "${lv[i]}" คือข้อใด`,
+    lv[i+1],lv.filter((x,j)=>j!==i+1).slice(0,3),
+    `ลำดับการจัดระบบคือ เซลล์ → เนื้อเยื่อ → อวัยวะ → ระบบอวัยวะ → ร่างกาย ดังนั้นถัดจาก ${lv[i]} คือ ${lv[i+1]}`,'ธรรมชาติของสิ่งมีชีวิต')}]
+};
+
+/* =========================================================
+   3) ACHIEVEMENTS
+   ========================================================= */
+const ACH=[
+ {id:'first',i:'🌱',n:'ก้าวแรก',d:'ตอบถูกข้อแรกได้'},
+ {id:'c5',i:'🔥',n:'ร้อนแรง',d:'ตอบถูกติดกัน 5 ข้อ'},
+ {id:'c10',i:'⚡',n:'สายฟ้า',d:'ตอบถูกติดกัน 10 ข้อ'},
+ {id:'c20',i:'🌪',n:'พายุความรู้',d:'ตอบถูกติดกัน 20 ข้อ'},
+ {id:'q25',i:'📗',n:'ขยันเรียน',d:'ทำครบ 25 ข้อในรอบเดียว'},
+ {id:'q50',i:'📚',n:'หนอนหนังสือ',d:'ทำครบ 50 ข้อในรอบเดียว'},
+ {id:'q100',i:'🏛',n:'มาราธอน',d:'ทำครบ 100 ข้อในรอบเดียว'},
+ {id:'acc90',i:'🎯',n:'แม่นเป้า',d:'ความแม่นยำ 90% (อย่างน้อย 20 ข้อ)'},
+ {id:'boss3',i:'👹',n:'นักล่าบอส',d:'ผ่านข้อท้าทาย 3 ข้อ'},
+ {id:'speed',i:'💨',n:'มือไว',d:'ตอบถูกภายใน 5 วินาที 10 ครั้ง'},
+ {id:'purist',i:'🧘',n:'พึ่งตัวเอง',d:'ทำครบ 20 ข้อโดยไม่ใช้ไอเทม'},
+ {id:'lv5',i:'⭐',n:'ดาวรุ่ง',d:'ไปถึงเลเวล 5'},
+ {id:'allTopic',i:'🧬',n:'รอบรู้',d:'ตอบถูกครบทุกหน่วยการเรียนรู้'},
+ {id:'score1k',i:'💎',n:'หนึ่งพันแต้ม',d:'ทำคะแนนถึง 1,000'}
+];
+
+/* =========================================================
+   4) STORAGE
+   ========================================================= */
+const DB={
+  get(){try{return JSON.parse(localStorage.getItem('bp2')||'{}')}catch(e){return{}}},
+  set(o){try{localStorage.setItem('bp2',JSON.stringify(o))}catch(e){}},
+  init(){const d=this.get();
+    d.best=d.best||0;d.totalQ=d.totalQ||0;d.totalOk=d.totalOk||0;d.plays=d.plays||0;
+    d.ach=d.ach||[];d.hist=d.hist||[];d.theme=d.theme||'';this.set(d);return d}
+};
+let DATA=DB.init();
+
+/* =========================================================
+   5) STATE
+   ========================================================= */
+const MODES={
+  chill:{n:'😌 ชิล',d:'ไม่มีเวลารายข้อ · ไอเทมเยอะ',qt:0,pw:{fifty:4,freeze:3,hint:4,skip:4}},
+  normal:{n:'⚔️ ปกติ',d:'สมดุล · มีข้อท้าทายทุก 10 ข้อ',qt:0,pw:{fifty:2,freeze:1,hint:2,skip:2}},
+  hard:{n:'💀 โหด',d:'จำกัด 20 วินาทีต่อข้อ · ไอเทมน้อย',qt:20,pw:{fifty:1,freeze:1,hint:1,skip:1}}
+};
+const PW=[{k:'fifty',i:'✂️',n:'50:50'},{k:'freeze',i:'❄️',n:'แช่แข็ง'},{k:'hint',i:'💡',n:'คำใบ้'},{k:'skip',i:'⏭',n:'ข้ามข้อ'}];
+let S={};
+function freshState(){
+  const m=MODES[CFG.mode];
+  return{left:CFG.dur,total:CFG.dur,timer:null,qT:null,qLeft:0,qMax:0,
+    deck:[],round:1,n:0,ok:0,score:0,streak:0,best:0,hist:[],cur:null,locked:false,
+    paused:false,frozen:0,qStart:0,bossWin:0,fast:0,usedPw:0,
+    xp:0,lv:1,pw:{...m.pw},ach:[],sound:S.sound!==false};
+}
+let CFG={topics:[...TOPICS],dur:2400,mode:'normal'};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const xpNeed=lv=>lv*150;
+
+/* ---- SOUND ---- */
+let AC=null;
+function beep(type){
+  if(!S.sound)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const M={ok:[660,880,1100],no:[220,160],end:[523,659,784,1046,1318],
+      lv:[523,659,784,1046,1318,1568],pw:[880,1320],boss:[180,240,180,300]};
+    (M[type]||M.ok).forEach((f,i)=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.type=(type==='no'||type==='boss')?'sawtooth':'sine';o.frequency.value=f;
+      o.connect(g);g.connect(AC.destination);
+      const t=AC.currentTime+i*(type==='end'||type==='lv'?.12:.07);
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.15,t+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,t+.22);o.start(t);o.stop(t+.25);
+    });
+  }catch(e){}
+}
+const vib=n=>{if(navigator.vibrate)navigator.vibrate(n)};
+
+/* =========================================================
+   6) INTRO BUILD
+   ========================================================= */
+(function intro(){
+  const d=$('#dna');
+  for(let i=0;i<22;i++){const s=document.createElement('i');s.style.animationDelay=(-i*.11)+'s';d.appendChild(s)}
+  // saved stats
+  const acc=DATA.totalQ?Math.round(DATA.totalOk/DATA.totalQ*100):0;
+  [['🏆',DATA.best,'คะแนนสูงสุด'],['📝',DATA.totalQ,'ข้อสะสม'],['🎯',acc+'%','ความแม่นยำรวม'],
+   ['🎮',DATA.plays,'ครั้งที่เล่น'],['🏅',DATA.ach.length+'/'+ACH.length,'เหรียญตรา']]
+  .forEach((s,i)=>{const e=document.createElement('div');e.className='sv glass';
+    e.style.animationDelay=(.08*i+.2)+'s';e.innerHTML=`<b>${s[1]}</b><span>${s[0]} ${s[2]}</span>`;$('#savedBox').appendChild(e)});
+  // topics
+  TOPICS.forEach(t=>{const b=document.createElement('button');b.className='opt on';b.dataset.t=t;b.textContent=t;
+    b.onclick=()=>{const on=$$('#optTopic .opt.on');if(b.classList.contains('on')&&on.length===1)return shakeEl(b);
+      b.classList.toggle('on');CFG.topics=$$('#optTopic .opt.on').map(x=>x.dataset.t)};$('#optTopic').appendChild(b)});
+  // time
+  [[1200,'20 นาที'],[2400,'40 นาที'],[3600,'60 นาที'],[99999,'ไม่จำกัดเวลา']].forEach((t,i)=>{
+    const b=document.createElement('button');b.className='opt'+(t[0]===2400?' on':'');b.textContent=t[1];
+    b.onclick=()=>{$$('#optTime .opt').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.dur=t[0]};
+    $('#optTime').appendChild(b)});
+  // mode
+  Object.entries(MODES).forEach(([k,m])=>{const b=document.createElement('button');
+    b.className='opt'+(k==='normal'?' on':'');b.innerHTML=`${m.n}`;b.title=m.d;
+    b.onclick=()=>{$$('#optMode .opt').forEach(x=>x.classList.remove('on'));b.classList.add('on');CFG.mode=k};
+    $('#optMode').appendChild(b)});
+  // theme
+  $$('#optTheme .th').forEach(b=>b.onclick=()=>{
+    $$('#optTheme .th').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    document.body.className=b.dataset.t;DATA.theme=b.dataset.t;DB.set(DATA)});
+  if(DATA.theme){document.body.className=DATA.theme;
+    $$('#optTheme .th').forEach(x=>x.classList.toggle('on',x.dataset.t===DATA.theme))}
+  // features
+  [['🎒','ไอเทมช่วยเหลือ','50:50 · แช่แข็งเวลา · คำใบ้ · ข้ามข้อ ได้เพิ่มเมื่อทำคอมโบ'],
+   ['👹','ข้อท้าทาย','ทุกข้อที่ 10 เจอโจทย์พิเศษ คะแนน x3 แต่จำกัดเวลา'],
+   ['⭐','เลเวลและ XP','สะสมประสบการณ์ ขึ้นเลเวลรับไอเทมฟรี'],
+   ['🏅','เหรียญตรา 14 แบบ','ปลดล็อกความสำเร็จ เก็บบันทึกถาวรในเครื่อง'],
+   ['📊','สถิติย้อนหลัง','กราฟคะแนน 10 ครั้งล่าสุด + วิเคราะห์รายหน่วย'],
+   ['🔖','ติดดาวข้อ','มาร์กข้อที่ไม่มั่นใจ แล้วกรองมาทบทวนตอนจบ']]
+  .forEach((f,i)=>{const e=document.createElement('div');e.className='fcard glass';e.style.animationDelay=(.09*i+.3)+'s';
+    e.innerHTML=`<span class="ic" style="animation-delay:${i*.25}s">${f[0]}</span><h4>${f[1]}</h4><p>${f[2]}</p>`;
+    $('#feat').appendChild(e)});
+})();
+function shakeEl(el){el.style.animation='shake .45s';setTimeout(()=>el.style.animation='',460)}
+
+/* =========================================================
+   7) BACKGROUND CANVAS
+   ========================================================= */
+(function bg(){
+  const cv=$('#cells'),cx=cv.getContext('2d');let W,H,P=[];
+  const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight;
+    const n=Math.min(42,Math.round(innerWidth/34));
+    P=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*22+7,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,h:Math.random()*90+140}))};
+  rs();addEventListener('resize',rs);
+  (function loop(){
+    cx.clearRect(0,0,W,H);
+    P.forEach((p,i)=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-60)p.x=W+60;if(p.x>W+60)p.x=-60;if(p.y<-60)p.y=H+60;if(p.y>H+60)p.y=-60;
+      const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0,`hsla(${p.h},100%,70%,.22)`);g.addColorStop(1,`hsla(${p.h},100%,60%,0)`);
+      cx.fillStyle=g;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();
+      cx.strokeStyle=`hsla(${p.h},100%,72%,.3)`;cx.lineWidth=1;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.stroke();
+      cx.fillStyle=`hsla(${p.h},100%,78%,.28)`;cx.beginPath();cx.arc(p.x,p.y,p.r*.3,0,7);cx.fill();
+      for(let j=i+1;j<P.length;j++){const q=P[j],d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<135){cx.strokeStyle=`rgba(0,255,198,${.1*(1-d/135)})`;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke()}}
+    });
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* =========================================================
+   8) ENGINE
+   ========================================================= */
+function go(id){$$('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');scrollTo({top:0,behavior:'smooth'})}
+const RC=2*Math.PI*24;$('#ringFg').style.strokeDasharray=RC;
+function drawTimer(){
+  const inf=CFG.dur>90000, p=inf?1:S.left/S.total;
+  $('#ringFg').style.strokeDashoffset=RC*(1-p);
+  $('#ringFg').style.stroke=S.frozen>0?'#4cc9f0':p>.5?'#00ffc6':p>.2?'#ffd166':'#ff4d6d';
+  if(inf){$('#tTxt').textContent='∞'}
+  else{const m=String(Math.floor(S.left/60)).padStart(2,'0'),s=String(S.left%60).padStart(2,'0');$('#tTxt').textContent=m+':'+s}
+  $('#hud').classList.toggle('warn',!inf&&S.left<=300&&S.frozen<=0);
+  $('#hud').classList.toggle('freeze',S.frozen>0);
+  document.body.classList.toggle('frozen',S.frozen>0);
+}
+function renderPw(){
+  $('#powers').innerHTML=PW.map(p=>`<button class="pw" data-k="${p.k}" ${S.pw[p.k]<1?'disabled':''} title="${p.n}">
+    <span>${p.i}</span><span>${p.n}</span><span class="cnt mono">${S.pw[p.k]}</span></button>`).join('');
+  $$('.pw').forEach(b=>b.onclick=()=>usePw(b.dataset.k,b));
+}
+function pickDeck(){
+  const pool=BANK.filter(q=>CFG.topics.includes(q.t));
+  return shuffle(pool.length?pool:BANK);
+}
+function draw(force){
+  if(!S.deck.length){S.deck=pickDeck();S.round++}
+  const isBoss=CFG.mode!=='chill'&&(S.n+1)%10===0;
+  const gpool=CFG.topics.filter(t=>GEN[t]).flatMap(t=>GEN[t]);
+  const useGen=gpool.length&&Math.random()<(isBoss?.5:.22);
+  let q=useGen?gpool[ri(0,gpool.length-1)]():S.deck.pop();
+  if(!useGen){const cor=q.c[q.a],c=shuffle(q.c);q={...q,c,a:c.indexOf(cor)}}
+  q.boss=isBoss;S.cur=q;S.locked=false;S.qStart=Date.now();
+  document.body.classList.toggle('boss',!!isBoss);
+  if(isBoss)beep('boss');
+  render();
+  const qt=isBoss?25:MODES[CFG.mode].qt;
+  qt?startQT(qt,isBoss):stopQT();
+}
+function render(){
+  const q=S.cur,card=$('#qcard');
+  card.classList.remove('in');card.classList.add('out');
+  setTimeout(()=>{
+    card.classList.remove('out');card.classList.toggle('boss',!!q.boss);
+    card.innerHTML=`
+      <div class="qtop">
+        <span class="topic">${q.t}</span>
+        <span class="qno mono">Q ${String(S.n+1).padStart(3,'0')}</span>
+        ${q.boss?'<span class="badge boss">👹 ข้อท้าทาย x3</span>':''}
+        ${q.gen?'<span class="badge">⚙ สุ่มสร้างใหม่</span>':''}
+        ${S.round>1?`<span class="badge">รอบ ${S.round}</span>`:''}
+        <button class="star" id="btnStar" title="ติดดาวข้อนี้ (B)">☆</button>
+      </div>
+      <div class="qtext">${q.q}</div>
+      <div class="choices">${q.c.map((c,i)=>
+        `<button class="ch" data-i="${i}" style="animation-delay:${.07*i+.1}s">
+          <span class="k">${'ABCD'[i]}</span><span>${c}</span></button>`).join('')}</div>
+      <div id="expSlot"></div>`;
+    card.classList.add('in');
+    card.querySelectorAll('.ch').forEach(b=>b.onclick=e=>pick(b,+b.dataset.i,e));
+    $('#btnStar').onclick=toggleStar;
+  },S.n===0?0:330);
+}
+function toggleStar(){
+  if(!S.cur)return;S.cur.star=!S.cur.star;
+  const b=$('#btnStar');b.textContent=S.cur.star?'★':'☆';b.classList.toggle('on',S.cur.star);
+  vib(25);
+}
+/* ---- per-question timer ---- */
+function startQT(sec,boss){
+  stopQT();S.qLeft=sec;S.qMax=sec;
+  $('#qtWrap').style.display='block';
+  $('#qtName').textContent=boss?'⏳ เวลาข้อท้าทาย':'⏳ เวลาข้อนี้';
+  $('#qtBar').style.width='100%';$('#qtNum').textContent=sec;
+  S.qT=setInterval(()=>{
+    if(S.paused||S.locked)return;
+    S.qLeft-=.1;
+    $('#qtBar').style.width=Math.max(0,S.qLeft/S.qMax*100)+'%';
+    $('#qtNum').textContent=Math.max(0,Math.ceil(S.qLeft));
+    if(S.qLeft<=0){stopQT();if(!S.locked)pick(null,-1,null)}
+  },100);
+}
+function stopQT(){clearInterval(S.qT);$('#qtWrap').style.display='none'}
+
+/* ---- answer ---- */
+function pick(btn,i,ev){
+  if(S.locked)return;S.locked=true;stopQT();
+  const q=S.cur,ok=i===q.a,secs=(Date.now()-S.qStart)/1000;
+  if(ev&&btn){const r=btn.getBoundingClientRect(),d=document.createElement('span');d.className='ripple';
+    const sz=Math.max(r.width,r.height);d.style.width=d.style.height=sz+'px';
+    d.style.left=(ev.clientX-r.left-sz/2)+'px';d.style.top=(ev.clientY-r.top-sz/2)+'px';btn.appendChild(d)}
+  $$('.ch').forEach((b,j)=>{
+    b.classList.add('lock');b.classList.remove('gone');
+    if(j===q.a){b.classList.add('correct');b.insertAdjacentHTML('beforeend',
+      `<svg class="mark" viewBox="0 0 24 24" fill="none" stroke="#21e6a4" stroke-width="3" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg>`)}
+    else if(j===i){b.classList.add('wrong');b.insertAdjacentHTML('beforeend',
+      `<svg class="mark" viewBox="0 0 24 24" fill="none" stroke="#ff4d6d" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>`)}
+    else b.classList.add('dim');
+  });
+  S.n++;
+  if(ok){
+    S.ok++;S.streak++;S.best=Math.max(S.best,S.streak);
+    let pts=(10+Math.min(S.streak-1,10)*2)*(q.boss?3:1);
+    S.score+=pts;addXp(pts);
+    if(q.boss)S.bossWin++;
+    if(secs<=5)S.fast++;
+    beep('ok');if(btn)burst(btn),pop(btn,'+'+pts);vib(30);
+    if(S.streak%5===0){combo(S.streak);grantPw()}
+  }else{S.streak=0;beep('no');vib([40,60,40])}
+  S.hist.push({q:q.q,ok,mine:i>=0?q.c[i]:'— หมดเวลา —',ans:q.c[q.a],e:q.e,t:q.t,star:!!q.star,boss:!!q.boss});
+  $('#expSlot').innerHTML=`
+    <div class="exp ${ok?'':'bad'}">
+      <h4>${i<0?'⏰ หมดเวลาข้อนี้':ok?'✅ ถูกต้อง! มาดูเหตุผลกัน':'❌ ยังไม่ใช่ — ทำความเข้าใจใหม่'}</h4>
+      <p>${q.e}</p>
+      <div class="ans">คำตอบที่ถูกคือ <b>${q.c[q.a]}</b>${q.boss&&ok?' · 🎉 ชนะข้อท้าทาย คะแนน x3':''}</div>
+    </div>
+    <div class="nextrow">
+      <button class="btn sm" id="btnNext">ข้อถัดไป →</button>
+      <span class="hintkey">กด <kbd>Enter</kbd> ไปต่อ · <kbd>1-4</kbd> ตอบ · <kbd>B</kbd> ติดดาว</span>
+    </div>`;
+  $('#btnNext').onclick=()=>draw();
+  document.body.classList.remove('boss');
+  upd();checkAch();
+}
+function upd(){
+  const set=(sel,v)=>{const el=$(sel);el.querySelector('b').textContent=v;
+    el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')};
+  set('#stScore',S.score);set('#stDone',S.n);
+  set('#stAcc',S.n?Math.round(S.ok/S.n*100):0);set('#stStreak',S.streak);
+  $('#pFill').style.width=Math.min(100,(S.n/40)*100)+'%';
+  const need=xpNeed(S.lv);
+  $('#lvBadge').textContent='LV '+S.lv;
+  $('#xpFill').style.width=Math.min(100,S.xp/need*100)+'%';
+  $('#xpTx').textContent=`${S.xp} / ${need} XP`;
+}
+function addXp(n){
+  S.xp+=n;
+  while(S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;levelUp()}
+}
+function levelUp(){
+  beep('lv');vib([50,40,80]);
+  const g=PW[ri(0,3)];S.pw[g.k]+=1;renderPw();
+  $('#lvN').textContent=S.lv;
+  $('#lvD').innerHTML=`ได้รับไอเทม <b style="color:var(--c1)">${g.i} ${g.n}</b> เพิ่ม 1 ชิ้น!`;
+  $('#lvup').classList.add('on');
+  setTimeout(()=>$('#lvup').classList.remove('on'),1900);
+}
+function grantPw(){
+  const g=PW[ri(0,3)];S.pw[g.k]++;renderPw();
+  toast('🎁','ได้รับไอเทม!',`${g.i} ${g.n} +1 จากคอมโบ ${S.streak}`);
+}
+
+/* ---- POWER-UPS ---- */
+function usePw(k,btn){
+  if(S.pw[k]<1||S.locked&&k!=='skip')return;
+  if(k==='fifty'){
+    if(S.locked)return;
+    const wrong=$$('.ch').filter(b=>+b.dataset.i!==S.cur.a&&!b.classList.contains('gone'));
+    if(wrong.length<2)return;
+    shuffle(wrong).slice(0,2).forEach((b,j)=>setTimeout(()=>b.classList.add('gone'),j*160));
+  }
+  if(k==='freeze'){S.frozen=20;toast('❄️','แช่แข็งเวลา!','เวลาหลักหยุดเดิน 20 วินาที')}
+  if(k==='hint'){
+    if(S.locked)return;
+    const h=S.cur.e.length>90?S.cur.e.slice(0,85)+'…':S.cur.e;
+    if(!$('#hintSlot')) $('.choices').insertAdjacentHTML('afterend',
+      `<div class="hintbox" id="hintSlot">💡 <b>คำใบ้:</b> ${h}</div>`);
+  }
+  if(k==='skip'){toast('⏭','ข้ามข้อแล้ว','ข้อนี้ไม่ถูกนับเป็นคำตอบผิด');stopQT();S.locked=false;draw();}
+  S.pw[k]--;S.usedPw++;beep('pw');vib(25);
+  renderPw();
+  const nb=$(`.pw[data-k="${k}"]`);if(nb){nb.classList.add('used');setTimeout(()=>nb.classList.remove('used'),650)}
+}
+
+/* ---- FX ---- */
+function pop(el,txt){const r=el.getBoundingClientRect(),d=document.createElement('div');
+  d.className='pointpop';d.textContent=txt;d.style.left=(r.right-84)+'px';d.style.top=(r.top-6)+'px';
+  document.body.appendChild(d);setTimeout(()=>d.remove(),1200)}
+function burst(el){
+  const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const cs=['#00ffc6','#7b5cff','#ff3d81','#ffd166'];
+  for(let i=0;i<22;i++){
+    const s=document.createElement('div');s.className='spark';
+    s.style.left=cx+'px';s.style.top=cy+'px';s.style.background=cs[i%4];s.style.boxShadow='0 0 12px '+cs[i%4];
+    document.body.appendChild(s);
+    const a=Math.random()*Math.PI*2,d=Math.random()*130+45;
+    s.animate([{transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(0)`,opacity:0}],
+      {duration:780+Math.random()*420,easing:'cubic-bezier(.16,1,.3,1)'}).onfinish=()=>s.remove();
+  }
+}
+function combo(n){const d=document.createElement('div');d.className='combo';
+  d.innerHTML=`🔥 ${n} COMBO!<div style="font-size:.85rem;color:#8fa3c4;-webkit-text-fill-color:#8fa3c4">โบนัสคะแนนเพิ่มขึ้นแล้ว</div>`;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),1450)}
+function toast(i,t,s){
+  const d=document.createElement('div');d.className='toast';
+  d.innerHTML=`<span class="ti">${i}</span><div><b>${t}</b><span>${s}</span></div>`;
+  $('#toasts').appendChild(d);setTimeout(()=>d.remove(),4100);
+}
+
+/* ---- ACHIEVEMENTS ---- */
+function unlock(id){
+  if(S.ach.includes(id))return;
+  S.ach.push(id);const a=ACH.find(x=>x.id===id);
+  toast(a.i,'ปลดล็อก: '+a.n,a.d);beep('pw');vib([30,40,30]);
+  if(!DATA.ach.includes(id)){DATA.ach.push(id);DB.set(DATA)}
+}
+function checkAch(){
+  const acc=S.n?S.ok/S.n*100:0;
+  if(S.ok>=1)unlock('first');
+  if(S.best>=5)unlock('c5'); if(S.best>=10)unlock('c10'); if(S.best>=20)unlock('c20');
+  if(S.n>=25)unlock('q25'); if(S.n>=50)unlock('q50'); if(S.n>=100)unlock('q100');
+  if(S.n>=20&&acc>=90)unlock('acc90');
+  if(S.bossWin>=3)unlock('boss3');
+  if(S.fast>=10)unlock('speed');
+  if(S.n>=20&&S.usedPw===0)unlock('purist');
+  if(S.lv>=5)unlock('lv5');
+  if(S.score>=1000)unlock('score1k');
+  const okT=new Set(S.hist.filter(h=>h.ok).map(h=>h.t));
+  if(TOPICS.every(t=>okT.has(t)))unlock('allTopic');
+}
+
+/* ---- KEYBOARD ---- */
+document.addEventListener('keydown',e=>{
+  if(!$('#scQuiz').classList.contains('on'))return;
+  if($('#modal').classList.contains('on'))return;
+  if(['1','2','3','4'].includes(e.key)&&!S.locked){const b=$$('.ch')[+e.key-1];if(b&&!b.classList.contains('gone'))b.click()}
+  if(e.key==='Enter'&&S.locked){const b=$('#btnNext');if(b)b.click()}
+  if(e.key.toLowerCase()==='b')toggleStar();
+  if(e.code==='Space'){e.preventDefault();togglePause()}
+});
+
+/* =========================================================
+   9) START / PAUSE / FINISH
+   ========================================================= */
+function start(){
+  const snd=S.sound!==false;
+  S=freshState();S.sound=snd;
+  go('#scQuiz');renderPw();drawTimer();upd();draw();
+  clearInterval(S.timer);
+  S.timer=setInterval(()=>{
+    if(S.paused)return;
+    if(S.frozen>0){S.frozen--;drawTimer();return}
+    if(CFG.dur<=90000){S.left--;drawTimer();if(S.left<=0)finish()}
+  },1000);
+  if(!localStorage.getItem('bp2_tour')){setTimeout(tourStart,900);localStorage.setItem('bp2_tour','1')}
+}
+function togglePause(){
+  if(!$('#scQuiz').classList.contains('on'))return;
+  S.paused=!S.paused;$('#pause').classList.toggle('on',S.paused);
+  $('#btnPause').textContent=S.paused?'▶':'⏸';
+}
+$('#btnResume').onclick=togglePause;
+$('#btnPause').onclick=togglePause;
+$('#btnStart').onclick=start;
+$('#btnHow').onclick=()=>{start();setTimeout(tourStart,700)};
+$('#btnSound').onclick=()=>{S.sound=!S.sound;$('#btnSound').textContent=S.sound?'🔊':'🔇'};
+$('#btnTour').onclick=tourStart;
+$('#btnFinish').onclick=askFinish;
+$('#btnEndTop').onclick=askFinish;
+$('#btnAchList').onclick=showAchModal;
+
+/* ---- MODAL ---- */
+function modal(html){$('#mbox').innerHTML=html;$('#modal').classList.add('on')}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+
+function askFinish(){
+  const wasP=S.paused;S.paused=true;
+  const acc=S.n?Math.round(S.ok/S.n*100):0;
+  modal(`<span class="mi">🏁</span>
+    <h3>จบการทดสอบเลยไหม?</h3>
+    <p>ระบบจะสรุปผล วิเคราะห์รายหน่วย และให้ทบทวนคำตอบทั้งหมด</p>
+    <div class="mini">
+      <div><b class="mono">${S.n}</b><span>ทำไปแล้ว</span></div>
+      <div><b class="mono">${S.ok}</b><span>ตอบถูก</span></div>
+      <div><b class="mono">${acc}%</b><span>แม่นยำ</span></div>
+      <div><b class="mono">${S.score}</b><span>คะแนน</span></div>
+    </div>
+    <div class="mrow">
+      <button class="btn danger sm" id="mYes">🏁 จบเลย ดูผลสรุป</button>
+      <button class="btn ghost sm" id="mNo">↩ ทำต่อ</button>
+    </div>`);
+  $('#mYes').onclick=()=>{closeModal();finish()};
+  $('#mNo').onclick=()=>{closeModal();S.paused=wasP};
+}
+function showAchModal(){
+  modal(`<span class="mi">🏅</span><h3>เหรียญตราทั้งหมด</h3>
+    <p>ปลดล็อกแล้ว ${DATA.ach.length} จาก ${ACH.length} รายการ</p>
+    <div class="achg" style="max-height:52vh;overflow-y:auto">${ACH.map((a,i)=>
+      `<div class="ach ${DATA.ach.includes(a.id)?'got':''}" style="animation-delay:${i*.03}s">
+        <span class="ai">${a.i}</span><b>${a.n}</b><span>${a.d}</span></div>`).join('')}</div>
+    <div class="mrow" style="margin-top:16px"><button class="btn ghost sm" onclick="document.getElementById('modal').classList.remove('on')">ปิด</button></div>`);
+}
+
+const RANKS=[[95,'MYTHIC','เหนือมนุษย์! ระดับตำนานชีววิทยา 🏆','#ffd166'],
+             [90,'LEGEND','สุดยอด! ระดับนักชีววิทยาตัวจริง เก่งมากครับ 🧬','#00ffc6'],
+             [80,'EXPERT','แม่นมาก! อีกนิดเดียวก็เต็มแล้ว ลุยต่อ 💪','#7b5cff'],
+             [70,'SKILLED','พื้นฐานแน่น เก็บจุดที่พลาดอีกหน่อยพุ่งแน่นอน ⚡','#4cc9f0'],
+             [60,'LEARNER','มาถูกทางแล้ว ทบทวนหน่วยที่คะแนนต่ำเพิ่มนะ 📘','#ffd166'],
+             [0,'ROOKIE','เริ่มต้นใหม่ได้เสมอ ค่อย ๆ เก็บทีละหน่วยนะครับ 🌱','#ff3d81']];
+let RFILTER='all';
+function finish(){
+  clearInterval(S.timer);stopQT();S.paused=false;
+  $('#pause').classList.remove('on');document.body.classList.remove('boss','frozen');
+  beep('end');checkAch();
+  const pct=S.n?Math.round(S.ok/S.n*100):0, rk=RANKS.find(r=>pct>=r[0]);
+  const isBest=S.score>DATA.best;
+  DATA.best=Math.max(DATA.best,S.score);DATA.totalQ+=S.n;DATA.totalOk+=S.ok;DATA.plays++;
+  DATA.hist.push({s:S.score,a:pct,n:S.n,d:Date.now()});if(DATA.hist.length>10)DATA.hist.shift();
+  DB.set(DATA);
+  const by={};S.hist.forEach(h=>{by[h.t]=by[h.t]||{o:0,n:0};by[h.t].n++;if(h.ok)by[h.t].o++});
+  const C=2*Math.PI*86;
+  const mins=Math.max(1,Math.round((S.total-S.left)/60));
+  $('#scResult').innerHTML=`
+   <div class="rhero glass">
+     <div class="tag" style="margin-bottom:12px">RESULT · ${S.n} ข้อ · ${CFG.dur>90000?mins+' นาที':mins+' นาที'} · ${MODES[CFG.mode].n}</div>
+     <div class="scorering">
+       <svg width="205" height="205" viewBox="0 0 205 205">
+         <circle cx="102.5" cy="102.5" r="86" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="13"/>
+         <circle id="scFg" cx="102.5" cy="102.5" r="86" fill="none" stroke="${rk[3]}" stroke-width="13"
+           stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}"/>
+       </svg>
+       <div class="mid"><div class="pct mono" id="pctN">0%</div><div class="lb">ความแม่นยำ</div></div>
+     </div>
+     <div class="rank" id="rankTx" style="color:${rk[3]}"></div>
+     <p style="color:var(--tx2)">${rk[2]}</p>
+     ${isBest&&S.score>0?'<div class="newbest mono">🎉 NEW HIGH SCORE!</div>':''}
+   </div>
+   <div class="rstats">
+     ${[['คะแนนรวม',S.score,'var(--c1)'],['ตอบถูก',S.ok+'/'+S.n,'var(--ok)'],['ตอบผิด',S.n-S.ok,'var(--no)'],
+        ['คอมโบสูงสุด',S.best,'var(--c4)'],['เลเวล','LV '+S.lv,'var(--c2)'],['ข้อท้าทายที่ผ่าน',S.bossWin,'var(--c3)']]
+       .map((s,i)=>`<div class="rst glass" style="animation-delay:${.12*i+.35}s"><b class="mono" style="color:${s[2]}">${s[1]}</b><span>${s[0]}</span></div>`).join('')}
+   </div>
+   <div class="panel glass"><h3>📊 วิเคราะห์รายหน่วยการเรียนรู้</h3>${
+     Object.keys(by).length?Object.entries(by).map(([k,v])=>{
+       const p=Math.round(v.o/v.n*100),col=p>=80?'var(--ok)':p>=60?'var(--c4)':'var(--no)';
+       return `<div class="bar"><div class="lab"><span>${k}</span><b style="color:${col}">${v.o}/${v.n} · ${p}%</b></div>
+       <div class="track"><div class="fill" data-w="${p}" style="background:linear-gradient(90deg,${col},var(--c2))"></div></div></div>`}).join('')
+     :'<p style="color:var(--tx2)">ยังไม่มีข้อมูล ลองทำข้อสอบดูนะครับ</p>'}
+   </div>
+   ${S.ach.length?`<div class="panel glass"><h3>🏅 เหรียญตราที่ได้รอบนี้ <span style="font-size:.8rem;color:var(--tx2)">(${S.ach.length} อัน)</span></h3>
+     <div class="achg">${S.ach.map((id,i)=>{const a=ACH.find(x=>x.id===id);
+       return `<div class="ach got" style="animation-delay:${i*.06}s"><span class="ai">${a.i}</span><b>${a.n}</b><span>${a.d}</span></div>`}).join('')}</div></div>`:''}
+   ${DATA.hist.length>1?`<div class="panel glass"><h3>📈 สถิติย้อนหลัง ${DATA.hist.length} ครั้งล่าสุด</h3>
+     <div class="chart" id="chart">${DATA.hist.map(h=>`<div data-v="${h.s} แต้ม · ${h.a}%" data-h="${Math.max(4,h.s/Math.max(...DATA.hist.map(x=>x.s),1)*100)}"></div>`).join('')}</div>
+     <div class="chartlab"><span>เก่าสุด</span><span>สูงสุด ${DATA.best} แต้ม</span><span>ล่าสุด</span></div></div>`:''}
+   <div class="panel glass"><h3>📝 ทบทวนคำตอบ</h3>
+     <div class="filters">
+       <button class="flt on" data-f="all">ทั้งหมด (${S.hist.length})</button>
+       <button class="flt" data-f="bad">เฉพาะที่ผิด (${S.hist.filter(h=>!h.ok).length})</button>
+       <button class="flt" data-f="star">ติดดาว (${S.hist.filter(h=>h.star).length})</button>
+     </div>
+     <div class="rev" id="revList"></div>
+   </div>
+   <div class="actions">
+     <button class="btn" id="btnAgain">🔄 ทำอีกรอบ</button>
+     <button class="btn ghost" id="btnHome">🏠 หน้าแรก</button>
+     <button class="btn ghost" id="btnShare">📋 คัดลอกผล</button>
+   </div>`;
+  go('#scResult');RFILTER='all';renderRev();
+  setTimeout(()=>{
+    $('#scFg').style.strokeDashoffset=C*(1-pct/100);
+    let v=0;const iv=setInterval(()=>{v+=Math.max(1,Math.ceil(pct/45));if(v>=pct){v=pct;clearInterval(iv)}$('#pctN').textContent=v+'%'},42);
+    $('#rankTx').innerHTML=rk[1].split('').map((c,i)=>`<span style="animation-delay:${.06*i+.45}s">${c}</span>`).join('');
+    $$('.fill').forEach((f,i)=>setTimeout(()=>f.style.width=f.dataset.w+'%',420+i*120));
+    $$('#chart div').forEach((b,i)=>setTimeout(()=>b.style.height=b.dataset.h+'%',500+i*70));
+    confetti();
+  },130);
+  $$('.flt').forEach(b=>b.onclick=()=>{$$('.flt').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');RFILTER=b.dataset.f;renderRev()});
+  $('#btnAgain').onclick=start;
+  $('#btnHome').onclick=()=>location.reload();
+  $('#btnShare').onclick=e=>{
+    const t=`🧬 BIO PULSE v2 — ชีววิทยา ม.4 เทอม 1\nคะแนน ${S.score} | ถูก ${S.ok}/${S.n} (${pct}%) | คอมโบสูงสุด ${S.best} | LV ${S.lv} | ระดับ ${rk[1]}`;
+    navigator.clipboard?.writeText(t).then(()=>{e.target.textContent='✅ คัดลอกแล้ว!';
+      setTimeout(()=>e.target.textContent='📋 คัดลอกผล',1800)});
+  };
+}
+function renderRev(){
+  const list=S.hist.filter(h=>RFILTER==='all'||(RFILTER==='bad'&&!h.ok)||(RFILTER==='star'&&h.star));
+  $('#revList').innerHTML=list.length?list.map((h,i)=>`
+    <div class="ri ${h.ok?'':'bad'}" style="animation-delay:${Math.min(i*.03,.9)}s">
+      <div class="qq">${h.star?'⭐ ':''}${h.boss?'👹 ':''}${i+1}. ${h.q}</div>
+      <div class="aa">${h.ok?'✅ ตอบถูก':`❌ คุณตอบ <b class="mine">${h.mine}</b> · เฉลย <b>${h.ans}</b>`}</div>
+      <div class="ee">💡 ${h.e}</div></div>`).join('')
+    :'<p style="color:var(--tx2)">ไม่มีข้อในหมวดนี้ครับ 👍</p>';
+}
+
+/* ---- CONFETTI ---- */
+function confetti(){
+  const cv=$('#confetti'),cx=cv.getContext('2d');
+  cv.width=innerWidth;cv.height=innerHeight;
+  const cs=['#00ffc6','#7b5cff','#ff3d81','#ffd166','#ffffff'];
+  const P=Array.from({length:190},()=>({x:Math.random()*cv.width,y:-Math.random()*cv.height*.6,
+    w:Math.random()*10+5,h:Math.random()*6+4,c:cs[ri(0,4)],vy:Math.random()*3.4+2.2,
+    vx:(Math.random()-.5)*2.6,r:Math.random()*6,vr:(Math.random()-.5)*.28,a:1}));
+  let t=0;
+  (function f(){t++;cx.clearRect(0,0,cv.width,cv.height);
+    P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.vy+=.045;if(t>190)p.a-=.016;
+      cx.save();cx.globalAlpha=Math.max(0,p.a);cx.translate(p.x,p.y);cx.rotate(p.r);
+      cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore()});
+    if(t<330)requestAnimationFrame(f);else cx.clearRect(0,0,cv.width,cv.height)})();
+}
+
+/* =========================================================
+   10) TOUR
+   ========================================================= */
+const TOUR=[
+ ['#hudTimer','⏱ วงแหวนเวลา','นับถอยหลังตามเวลาที่เลือก วงแหวนหดลงและเปลี่ยนสีเหลือง-แดงเมื่อใกล้หมด พอครบเวลาระบบสรุปผลให้อัตโนมัติ'],
+ ['#stScore','💎 คะแนนสะสม','ตอบถูกได้ 10 คะแนนพื้นฐาน + โบนัสตามคอมโบ และข้อท้าทายคูณ 3 เท่า'],
+ ['#stStreak','🔥 คอมโบ','นับข้อที่ตอบถูกติดกัน ครบทุก 5 ข้อจะได้ไอเทมฟรี 1 ชิ้น แต่ถ้าตอบผิดจะรีเซ็ตทันที'],
+ ['.xprow','⭐ แถบ XP และเลเวล','คะแนนที่ได้จะกลายเป็น XP พอเต็มหลอดจะเลเวลอัป พร้อมรับไอเทมฟรีทุกครั้ง'],
+ ['#powers','🎒 ไอเทมช่วยเหลือ','✂️ ตัดตัวเลือกผิด 2 ข้อ · ❄️ หยุดเวลา 20 วินาที · 💡 ดูคำใบ้ · ⏭ ข้ามข้อโดยไม่นับผิด'],
+ ['#qcard','🧬 การ์ดคำถาม','แตะตัวเลือกเพื่อตอบ หรือกด 1-4 บนคีย์บอร์ด กดดาว ☆ เพื่อมาร์กข้อที่ไม่มั่นใจไว้ทบทวน'],
+ ['#btnPause','⏸ หยุดชั่วคราว','กดเมื่อต้องการพัก เวลาจะหยุดเดินทันที (หรือกด Spacebar)'],
+ ['#btnFinish','🏁 ปุ่มจบการทดสอบ','กดเมื่อพร้อมดูผล ระบบจะถามยืนยันพร้อมโชว์สถิติปัจจุบัน แล้วสรุปผลแบบละเอียดให้']
+];
+let ti=0;
+function tourStart(){ti=0;$('#tour').classList.add('on');tourShow()}
+function tourShow(){
+  const [sel,title,text]=TOUR[ti],el=$(sel);
+  if(!el){tourEnd();return}
+  el.scrollIntoView({block:'center',behavior:'smooth'});
+  setTimeout(()=>{
+    const r=el.getBoundingClientRect(),pad=9,sp=$('#spot');
+    sp.style.left=(r.left-pad)+'px';sp.style.top=(r.top-pad)+'px';
+    sp.style.width=(r.width+pad*2)+'px';sp.style.height=(r.height+pad*2)+'px';
+    const tip=$('#tip'),w=Math.min(320,innerWidth-26);
+    tip.innerHTML=`<h4>${title}</h4><p>${text}</p>
+      <div class="row"><div class="dots">${TOUR.map((_,i)=>`<i class="${i===ti?'on':''}"></i>`).join('')}</div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="tskip" id="tSkip">ข้าม</button>
+        <button class="tbtn" id="tNext">${ti===TOUR.length-1?'เริ่มเลย!':'ถัดไป →'}</button>
+      </div></div>`;
+    tip.style.width=w+'px';
+    tip.style.left=Math.min(Math.max(12,r.left+r.width/2-w/2),innerWidth-w-12)+'px';
+    tip.style.top=(r.bottom+200>innerHeight?Math.max(12,r.top-210):r.bottom+16)+'px';
+    $('#tNext').onclick=()=>{ti++;ti<TOUR.length?tourShow():tourEnd()};
+    $('#tSkip').onclick=tourEnd;
+  },260);
+}
+function tourEnd(){$('#tour').classList.remove('on')}
+addEventListener('resize',()=>{if($('#tour').classList.contains('on'))tourShow()});
+</script>
+</body>
+</html>
